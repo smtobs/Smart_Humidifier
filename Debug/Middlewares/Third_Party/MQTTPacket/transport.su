@@ -1,0 +1,4 @@
+transport.c:67:5:transport_sendPacketBuffer	136	static
+transport.c:111:5:transport_getdata	16	static
+transport.c:131:5:transport_open	136	static
+transport.c:157:5:transport_close	16	static

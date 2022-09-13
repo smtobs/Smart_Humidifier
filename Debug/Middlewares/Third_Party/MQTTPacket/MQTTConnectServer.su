@@ -1,0 +1,4 @@
+MQTTConnectServer.c:35:5:MQTTPacket_checkVersion	24	static
+MQTTConnectServer.c:80:5:MQTTDeserialize_connect	64	static
+MQTTConnectServer.c:172:5:MQTTSerialize_connack	48	static
+MQTTConnectServer.c:271:5:MQTTDeserialize_disconnect	32	static

@@ -1,0 +1,7 @@
+MQTTSerializePublish.c:40:5:MQTTSerialize_publishLength	32	static
+MQTTSerializePublish.c:79:5:MQTTSerialize_publish	48	static
+MQTTSerializePublish.c:150:5:MQTTSerialize_ack	40	static
+MQTTSerializePublish.c:212:5:MQTTSerialize_puback	32	static
+MQTTSerializePublish.c:239:5:MQTTSerialize_pubrec	32	static
+MQTTSerializePublish.c:267:5:MQTTSerialize_pubrel	32	static
+MQTTSerializePublish.c:294:5:MQTTSerialize_pubcomp	32	static

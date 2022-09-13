@@ -1,0 +1,9 @@
+mqttclient.c:20:9:MQTT_Connect	264	static
+mqttclient.c:103:6:deliverMessage	24	static
+mqttclient.c:115:6:UserMsgCtl	16	static
+mqttclient.c:147:6:mqtt_pktype_ctl	96	static
+mqttclient.c:209:9:WaitForPacket	528	static
+mqttclient.c:230:6:Client_Connect	16	static
+mqttclient.c:267:9:ReadPacketTimeout	24	static
+mqttclient.c:291:10:GetNextPackID	4	static
+mqttclient.c:304:9:MQTTMsgPublish	608	static

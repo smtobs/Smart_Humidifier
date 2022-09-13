@@ -1,0 +1,2 @@
+lcd.c:14:6:lcdInit	56	static
+lcd.c:22:6:lcdTask	88	static
