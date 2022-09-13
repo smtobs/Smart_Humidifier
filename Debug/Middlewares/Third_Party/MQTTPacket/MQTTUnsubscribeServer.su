@@ -1,2 +1,0 @@
-MQTTUnsubscribeServer.c:50:5:MQTTDeserialize_unsubscribe	48	static
-MQTTUnsubscribeServer.c:112:5:MQTTSerialize_unsuback	40	static
