@@ -1,0 +1,2 @@
+event_loop.c:10:6:eventLoopTask	32	static
+event_loop.c:44:6:eventLoopInit	56	static

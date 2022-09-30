@@ -1,0 +1,2 @@
+sensor.c:9:6:sensorTask	160	static
+sensor.c:78:6:sensorInit	56	static

@@ -1,0 +1,86 @@
+Bitmap.hpp:137:14:touchgfx::BitmapId touchgfx::Bitmap::getId() const	16	static
+Drawable.hpp:64:13:touchgfx::Drawable::~Drawable()	16	static
+Drawable.hpp:64:13:virtual touchgfx::Drawable::~Drawable()	16	static
+Drawable.hpp:134:23:virtual touchgfx::Drawable* touchgfx::Drawable::getFirstChild()	16	static
+Drawable.hpp:218:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	24	static
+Drawable.hpp:271:18:virtual void touchgfx::Drawable::setX(int16_t)	16	static
+Drawable.hpp:283:18:virtual void touchgfx::Drawable::setY(int16_t)	16	static
+Drawable.hpp:299:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	16	static
+Drawable.hpp:312:18:virtual void touchgfx::Drawable::setWidth(int16_t)	16	static
+Drawable.hpp:324:18:virtual void touchgfx::Drawable::setHeight(int16_t)	16	static
+Drawable.hpp:334:18:virtual void touchgfx::Drawable::childGeometryChanged()	16	static
+Drawable.hpp:345:18:virtual void touchgfx::Drawable::handleClickEvent(const touchgfx::ClickEvent&)	16	static
+Drawable.hpp:356:18:virtual void touchgfx::Drawable::handleGestureEvent(const touchgfx::GestureEvent&)	16	static
+Drawable.hpp:367:10:void touchgfx::Drawable::setWidthHeight(int16_t, int16_t)	16	static
+Drawable.hpp:444:18:virtual void touchgfx::Drawable::handleDragEvent(const touchgfx::DragEvent&)	16	static
+Drawable.hpp:454:18:virtual void touchgfx::Drawable::handleTickEvent()	16	static
+Drawable.hpp:490:10:bool touchgfx::Drawable::isVisible() const	16	static
+Drawable.hpp:502:10:bool touchgfx::Drawable::isTouchable() const	16	static
+Drawable.hpp:541:18:virtual void touchgfx::Drawable::moveTo(int16_t, int16_t)	16	static
+Drawable.hpp:578:10:void touchgfx::Drawable::resetDrawChainCache()	16	static
+Drawable.hpp:656:18:virtual void touchgfx::Drawable::setupDrawChain(const touchgfx::Rect&, touchgfx::Drawable**)	24	static
+Screen.hpp:49:13:touchgfx::Screen::~Screen()	16	static
+Screen.hpp:49:13:virtual touchgfx::Screen::~Screen()	16	static
+Screen.hpp:96:18:virtual void touchgfx::Screen::setupScreen()	16	static
+Screen.hpp:107:18:virtual void touchgfx::Screen::afterTransition()	16	static
+Screen.hpp:118:18:virtual void touchgfx::Screen::tearDownScreen()	16	static
+Screen.hpp:147:18:virtual void touchgfx::Screen::handleTickEvent()	16	static
+Screen.hpp:157:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	16	static
+Widget.hpp:50:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	24	static
+Widget.hpp:39:7:touchgfx::Widget::~Widget()	16	static
+Widget.hpp:39:7:virtual touchgfx::Widget::~Widget()	16	static
+AbstractButton.hpp:34:7:touchgfx::AbstractButton::~AbstractButton()	16	static
+AbstractButton.hpp:34:7:virtual touchgfx::AbstractButton::~AbstractButton()	16	static
+TypedText.hpp:68:13:touchgfx::TypedText::~TypedText()	16	static
+TypedText.hpp:68:13:virtual touchgfx::TypedText::~TypedText()	16	static
+TextArea.hpp:44:7:touchgfx::TextArea::~TextArea()	16	static
+TextArea.hpp:44:7:virtual touchgfx::TextArea::~TextArea()	16	static
+TextAreaWithWildcard.hpp:61:10:void touchgfx::TextAreaWithOneWildcard::setWildcard(const UnicodeChar*)	16	static
+ToggleButton.hpp:60:10:bool touchgfx::ToggleButton::getState() const	24	static
+View.hpp:40:7:touchgfx::View<screenPresenter>::~View()	16	static
+View.hpp:40:7:virtual touchgfx::View<screenPresenter>::~View()	16	static
+screenViewBase.hpp:21:13:screenViewBase::~screenViewBase()	16	static
+screenViewBase.hpp:21:13:virtual screenViewBase::~screenViewBase()	16	static
+screenViewBase.hpp:32:18:virtual void screenViewBase::updateSetUpButtonState()	16	static
+screenView.hpp:11:13:screenView::~screenView()	16	static
+screenView.hpp:11:13:virtual screenView::~screenView()	16	static
+gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
+basic_string.h:6546:3:std::string std::__cxx11::to_string(int)	24	static
+screenView.cpp:5:1:screenView::screenView()	16	static
+screenView.cpp:10:6:virtual void screenView::setupScreen()	24	static
+screenView.cpp:26:6:virtual void screenView::tearDownScreen()	16	static
+screenView.cpp:31:6:virtual void screenView::HumidifierControlButtonState()	16	static
+screenView.cpp:36:6:virtual void screenView::updateOnOffButtonState()	24	static
+screenView.cpp:41:6:virtual void screenView::UpdateTempView(int)	56	static
+screenView.cpp:52:6:virtual void screenView::UpdateHumView(int)	56	static
+string_conversions.h:99:5:) [with _String = std::__cxx11::basic_string<char>; _CharT = char]	44	dynamic
+basic_string.h:625:9:std::__cxx11::basic_string<_CharT, _Traits, _Alloc>::basic_string(_InputIterator, _InputIterator, const _Alloc&) [with _InputIterator = char*; <template-parameter-2-2> = void; _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	32	static
+basic_string.h:263:9:void std::__cxx11::basic_string<_CharT, _Traits, _Alloc>::_M_construct(_InIterator, _InIterator) [with _InIterator = char*; _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	32	static
+basic_string.h:243:9:void std::__cxx11::basic_string<_CharT, _Traits, _Alloc>::_M_construct_aux(_InIterator, _InIterator, std::__false_type) [with _InIterator = char*; _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	40	static
+basic_string.tcc:206:7:void std::__cxx11::basic_string<_CharT, _Traits, _Alloc>::_M_construct(_InIterator, _InIterator, std::forward_iterator_tag) [with _FwdIterator = char*; _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	32	static
+type_traits.h:152:5:bool __gnu_cxx::__is_null_pointer(_Type*) [with _Type = char]	16	static
+stl_iterator_base_funcs.h:138:5:typename std::iterator_traits<_Iterator>::difference_type std::distance(_InputIterator, _InputIterator) [with _InputIterator = char*]	32	static
+stl_iterator_base_types.h:205:5:constexpr typename std::iterator_traits<_Iterator>::iterator_category std::__iterator_category(const _Iter&) [with _Iter = char*]	16	static
+stl_iterator_base_funcs.h:98:5:constexpr typename std::iterator_traits<_Iterator>::difference_type std::__distance(_RandomAccessIterator, _RandomAccessIterator, std::random_access_iterator_tag) [with _RandomAccessIterator = char*]	24	static
+Container.hpp:42:7:touchgfx::Container::~Container()	16	static
+Container.hpp:42:7:virtual touchgfx::Container::~Container()	16	static
+Box.hpp:36:7:touchgfx::Box::~Box()	16	static
+Box.hpp:36:7:virtual touchgfx::Box::~Box()	16	static
+AbstractClock.hpp:36:7:touchgfx::AbstractClock::~AbstractClock()	16	static
+AbstractClock.hpp:36:7:virtual touchgfx::AbstractClock::~AbstractClock()	16	static
+DigitalClock.hpp:39:7:touchgfx::DigitalClock::~DigitalClock()	16	static
+DigitalClock.hpp:39:7:virtual touchgfx::DigitalClock::~DigitalClock()	16	static
+Image.hpp:42:7:touchgfx::Image::~Image()	16	static
+Image.hpp:42:7:virtual touchgfx::Image::~Image()	16	static
+Button.hpp:33:7:touchgfx::Button::~Button()	16	static
+Button.hpp:33:7:virtual touchgfx::Button::~Button()	16	static
+ToggleButton.hpp:34:7:touchgfx::ToggleButton::~ToggleButton()	16	static
+ToggleButton.hpp:34:7:virtual touchgfx::ToggleButton::~ToggleButton()	16	static
+TextAreaWithWildcard.hpp:37:7:touchgfx::TextAreaWithOneWildcard::~TextAreaWithOneWildcard()	16	static
+TextAreaWithWildcard.hpp:37:7:virtual touchgfx::TextAreaWithOneWildcard::~TextAreaWithOneWildcard()	16	static
+Callback.hpp:362:8:touchgfx::Callback<screenViewBase, const touchgfx::AbstractButton&>::~Callback()	16	static
+Callback.hpp:362:8:virtual touchgfx::Callback<screenViewBase, const touchgfx::AbstractButton&>::~Callback()	16	static
+Callback.hpp:141:13:touchgfx::GenericCallback<T1, void, void>::~GenericCallback() [with T1 = const touchgfx::AbstractButton&]	16	static
+Callback.hpp:141:13:touchgfx::GenericCallback<T1, void, void>::~GenericCallback() [with T1 = const touchgfx::AbstractButton&]	16	static
+Callback.hpp:392:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = screenViewBase; T1 = const touchgfx::AbstractButton&]	16	static
+Callback.hpp:402:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = screenViewBase; T1 = const touchgfx::AbstractButton&]	16	static

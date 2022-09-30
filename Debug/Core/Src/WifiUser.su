@@ -1,0 +1,4 @@
+WifiUser.c:5:6:Wifi_UserInit	8	static
+WifiUser.c:16:7:Wifi_UserProcess	8	static
+WifiUser.c:42:7:Wifi_UserGetUdpData	16	static
+WifiUser.c:47:7:Wifi_UserGetTcpData	16	static
