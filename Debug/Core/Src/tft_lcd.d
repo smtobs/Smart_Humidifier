@@ -55,9 +55,9 @@ Core/Src/tft_lcd.o: ../Core/Src/tft_lcd.c ../Core/Inc/tft_lcd.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h \
- c:\users\v7dd1\stm32cubeide\workspace_1.6.1\smarthumidfier\drivers\bsp\components\common\lcd.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h \
+ c:\users\v7dd1\stm32cubeide\workspace_1.6.1\test2\smarthumidfier\drivers\bsp\components\common\lcd.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h
 
 ../Core/Inc/tft_lcd.h:
 
@@ -177,8 +177,8 @@ Core/Src/tft_lcd.o: ../Core/Src/tft_lcd.c ../Core/Inc/tft_lcd.h \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h:
 
-c:\users\v7dd1\stm32cubeide\workspace_1.6.1\smarthumidfier\drivers\bsp\components\common\lcd.h:
+c:\users\v7dd1\stm32cubeide\workspace_1.6.1\test2\smarthumidfier\drivers\bsp\components\common\lcd.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h:

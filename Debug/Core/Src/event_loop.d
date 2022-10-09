@@ -55,7 +55,9 @@ Core/Src/event_loop.o: ../Core/Src/event_loop.c ../Core/Inc/event_loop.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/ringbuffer.h
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h \
+ ../Core/Inc/main.h
 
 ../Core/Inc/event_loop.h:
 
@@ -177,4 +179,8 @@ Core/Src/event_loop.o: ../Core/Src/event_loop.c ../Core/Inc/event_loop.h \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
-../Core/Inc/ringbuffer.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
+
+../Core/Inc/main.h:

@@ -42,7 +42,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-DHT11_Dev dht11Dev;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -102,19 +101,28 @@ int main(void)
   MX_CRC_Init();
   MX_DMA2D_Init();
   MX_FMC_Init();
-  MX_I2C3_Init();
   MX_LTDC_Init();
   MX_SPI5_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
-  MX_UART5_Init();
+  MX_TIM7_Init();
+  MX_I2C3_Init();
+  MX_USART3_UART_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
-  //WifiInit(osPriorityLow);
-  workTaskInit(osPriorityAboveNormal);
-  eventLoopInit(osPriorityNormal);
+#if (1)
   sensorInit(osPriorityRealtime);
   tftLcdInit(osPriorityHigh);
+  workTaskInit(osPriorityAboveNormal);
+  eventLoopInit(osPriorityNormal);
+  WifiInit(osPriorityLow);
+#else
+  tftLcdInit(osPriorityRealtime);
+  workTaskInit(osPriorityHigh);
+  eventLoopInit(osPriorityAboveNormal);
+  sensorInit(osPriorityNormal);
+
+#endif
   //HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
@@ -202,6 +210,7 @@ void SystemClock_Config(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
+  static int32_t timeOut = 0;
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {

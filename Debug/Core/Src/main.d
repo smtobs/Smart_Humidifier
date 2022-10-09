@@ -56,13 +56,22 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/crc.h ../Core/Inc/main.h ../Core/Inc/dma2d.h \
  ../Core/Inc/i2c.h ../Core/Inc/ltdc.h ../Core/Inc/spi.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h ../Core/Inc/fmc.h \
- ../TouchGFX/App/app_touchgfx.h ../Core/Inc/tft_lcd.h \
- ../Core/Inc/common.h ../Core/Inc/util.h ../Core/Inc/tft_lcd_config.h \
- ../Core/Inc/Wifi.h ../Core/Inc/WifiConfig.h ../Core/Inc/usart.h \
- ../Core/Inc/sensor.h ../Core/Inc/sensorConfig.h ../Core/Inc/dht11.h \
- ../Core/Inc/event.h ../Core/Inc/workTask.h ../Core/Inc/workTaskConfig.h \
- ../Core/Inc/ringbuffer.h ../Core/Inc/event_loop.h \
- ../Core/Inc/event_loop_config.h
+ ../TouchGFX/App/app_touchgfx.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h \
+ ../Core/Inc/common.h ../Core/Inc/util.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/sensor.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/sensorConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTask.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event_loop.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h
 
 ../Core/Inc/main.h:
 
@@ -196,34 +205,34 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../TouchGFX/App/app_touchgfx.h:
 
-../Core/Inc/tft_lcd.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h:
 
 ../Core/Inc/common.h:
 
 ../Core/Inc/util.h:
 
-../Core/Inc/tft_lcd_config.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h:
 
-../Core/Inc/Wifi.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
 
-../Core/Inc/WifiConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
 
-../Core/Inc/usart.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/sensor.h:
 
-../Core/Inc/sensor.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/sensorConfig.h:
 
-../Core/Inc/sensorConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
 
-../Core/Inc/dht11.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h:
 
-../Core/Inc/event.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTask.h:
 
-../Core/Inc/workTask.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h:
 
-../Core/Inc/workTaskConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
 
-../Core/Inc/ringbuffer.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event_loop.h:
 
-../Core/Inc/event_loop.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h:
 
-../Core/Inc/event_loop_config.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h:

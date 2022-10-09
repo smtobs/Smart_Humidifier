@@ -55,7 +55,16 @@ Core/Src/workTask.o: ../Core/Src/workTask.c ../Core/Inc/workTask.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/ringbuffer.h ../Core/Inc/event.h
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h \
+ ../Core/Inc/event.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h \
+ ../Core/Inc/main.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ ../Core/Inc/usart.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/CJSON/cJSON.h
 
 ../Core/Inc/workTask.h:
 
@@ -175,6 +184,22 @@ Core/Src/workTask.o: ../Core/Src/workTask.c ../Core/Inc/workTask.h \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
-../Core/Inc/ringbuffer.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
 
 ../Core/Inc/event.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
+
+../Core/Inc/main.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
+
+../Core/Inc/usart.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/CJSON/cJSON.h:

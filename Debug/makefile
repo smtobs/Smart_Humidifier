@@ -64,6 +64,13 @@ RM := rm -rf
 -include Drivers/BSP/Components/exc7200/subdir.mk
 -include Drivers/BSP/Components/cs43l22/subdir.mk
 -include Core/Startup/subdir.mk
+-include Core/Src/WIFI/subdir.mk
+-include Core/Src/TFT_LCD/subdir.mk
+-include Core/Src/SENSOR/subdir.mk
+-include Core/Src/RINGBUFFER/subdir.mk
+-include Core/Src/MQTT/subdir.mk
+-include Core/Src/EVENT/subdir.mk
+-include Core/Src/CJSON/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -129,8 +136,8 @@ all: main-build
 main-build: SmartHumidfier.elf secondary-outputs
 
 # Tool invocations
-SmartHumidfier.elf: $(OBJS) $(USER_OBJS) C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\SmartHumidfier\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "SmartHumidfier.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\SmartHumidfier\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SmartHumidfier.map" -Wl,--gc-sections -static -Wl,--start-group -l:libtouchgfx-float-abi-hard.a -Wl,--end-group -L"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\SmartHumidfier\Middlewares\ST\touchgfx\lib\core\cortex_m4f\gcc" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+SmartHumidfier.elf: $(OBJS) $(USER_OBJS) C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\test2\SmartHumidfier\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "SmartHumidfier.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\test2\SmartHumidfier\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SmartHumidfier.map" -Wl,--gc-sections -static -Wl,--start-group -l:libtouchgfx-float-abi-hard.a -Wl,--end-group -L"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\test2\SmartHumidfier\Middlewares\ST\touchgfx\lib\core\cortex_m4f\gcc" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

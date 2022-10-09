@@ -54,8 +54,9 @@ Core/Src/Wifi.o: ../Core/Src/Wifi.c ../Core/Inc/Wifi.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/WifiConfig.h ../Core/Inc/mqtt.h ../Core/Inc/Wifi.h \
- ../Core/Inc/common.h ../Core/Inc/util.h
+ ../Core/Inc/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h \
+ ../Core/Inc/main.h ../Core/Inc/common.h ../Core/Inc/util.h
 
 ../Core/Inc/Wifi.h:
 
@@ -175,9 +176,9 @@ Core/Src/Wifi.o: ../Core/Src/Wifi.c ../Core/Inc/Wifi.h \
 
 ../Core/Inc/WifiConfig.h:
 
-../Core/Inc/mqtt.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h:
 
-../Core/Inc/Wifi.h:
+../Core/Inc/main.h:
 
 ../Core/Inc/common.h:
 

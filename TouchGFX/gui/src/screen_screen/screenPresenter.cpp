@@ -24,10 +24,16 @@ void screenPresenter::updateHumidifierControlState(bool state)
 
 void screenPresenter::UpdateTemp(int val)
 {
-	view.UpdateTempView(val);
+	if (val >= 0 && val <= 50)
+	{
+		view.UpdateTempView(val);
+	}
 }
 
 void screenPresenter::UpdateHum(int val)
 {
-	view.UpdateHumView(val);
+	if (val >= 0 && val <= 100)
+	{
+		view.UpdateHumView(val);
+	}
 }

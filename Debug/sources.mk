@@ -30,6 +30,13 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Core/Src/CJSON \
+Core/Src/EVENT \
+Core/Src/MQTT \
+Core/Src/RINGBUFFER \
+Core/Src/SENSOR \
+Core/Src/TFT_LCD \
+Core/Src/WIFI \
 Core/Src \
 Core/Startup \
 Drivers/BSP/Components/cs43l22 \

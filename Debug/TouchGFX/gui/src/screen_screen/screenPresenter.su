@@ -15,4 +15,4 @@ screenPresenter.cpp:10:6:virtual void screenPresenter::activate()	16	static
 screenPresenter.cpp:15:6:virtual void screenPresenter::deactivate()	16	static
 screenPresenter.cpp:20:6:virtual void screenPresenter::updateHumidifierControlState(bool)	16	static
 screenPresenter.cpp:25:6:virtual void screenPresenter::UpdateTemp(int)	16	static
-screenPresenter.cpp:30:6:virtual void screenPresenter::UpdateHum(int)	16	static
+screenPresenter.cpp:33:6:virtual void screenPresenter::UpdateHum(int)	16	static

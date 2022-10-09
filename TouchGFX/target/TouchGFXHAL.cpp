@@ -19,6 +19,8 @@
 /* USER CODE BEGIN TouchGFXHAL.cpp */
 
 #include "stm32f4xx.h"
+#include <cstring>
+
 
 #include "touchgfx/hal/OSWrappers.hpp"
 extern "C"{
@@ -26,6 +28,8 @@ extern "C"{
 }
 
 using namespace touchgfx;
+
+extern UART_HandleTypeDef huart1;
 
 void TouchGFXHAL::initialize()
 {
@@ -49,6 +53,10 @@ void TouchGFXHAL::taskEntry()
 	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_SET);
 
 	LCD_IO_WriteReg(0x29);
+
+	HAL_UART_Transmit(&huart1,
+					(uint8_t *)"taskEntry... init !!!!\r\n",
+					strlen("taskEntry... init !!!!\r\n"), 100);
 	for(;;)
 	{
 		OSWrappers::waitForVSync();

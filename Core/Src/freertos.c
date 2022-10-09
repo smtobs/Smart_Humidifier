@@ -60,6 +60,8 @@ int e_flag;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osMessageQId envQueueHandle;
+osSemaphoreId sensorSemHandle;
+
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 void TouchGFX_Task(void const * argument);
@@ -145,6 +147,11 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* definition and creation of sensorSem */
+  osSemaphoreDef(sensorSem);
+  sensorSemHandle = osSemaphoreCreate(osSemaphore(sensorSem), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -155,7 +162,6 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of envQueue */
-  //osMessageQDef(envQueue, 16, ENV_MSG);
   osMessageQDef(envQueue, 16, ENV_MSG);
   envQueueHandle = osMessageCreate(osMessageQ(envQueue), NULL);
 
@@ -186,67 +192,10 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-	osEvent evt;
-	int32_t i;
-
-
   /* Infinite loop */
   for (;;)
   {
-		evt = osSignalWait(0x000F, 100);
-		if (evt.status == osEventSignal)
-		{
-#if (0)
-			if ((evt.value.signals & BUZZER_ON) == BUZZER_ON)
-			{
-				//DEBUG_PRINT("BUZZER_ON");
-				//e_flag = 1;
-				ring_buffer_queue(&ring_buffer, (char)evt.value.signals & BUZZER_ON);
-				//osSemaphoreRelease(myCountingSem01Handle);
-			}
-
-			if ((evt.value.signals & BUZZER_OFF) == BUZZER_OFF)
-			{
-				//DEBUG_PRINT("BUZZER_OFF");
-			}
-
-			if ((evt.value.signals & HUM_ON) == HUM_ON)
-			{
-				//DEBUG_PRINT("HUM_ON");
-				ring_buffer_queue(&ring_buffer, HUM_ON);
-			}
-
-			if ((evt.value.signals & HUM_OFF) == HUM_OFF)
-			{
-				DEBUG_PRINT("HUM_OFF");
-			}
-#else
-		}
-			for (i=0; i<=4; i++)
-			{
-#if (1)
-				switch ( (evt.value.signals) & (1U << i))
-				{
-					case BUZZER_ON:
-					case BUZZER_OFF:
-					case HUM_ON:
-					case HUM_OFF:
-
-						ring_buffer_queue(&ring_buffer, (char)(evt.value.signals) & (1U << i));
-						break;
-
-					default:
-						break;
-				}
-#else
-				if ((evt.value.signals & i) == i)
-				{
-					ring_buffer_queue(&ring_buffer, (char)evt.value.signals & i);
-				}
-#endif
-			}
-#endif
-		osDelay(1);
+	  osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
 }

@@ -117,9 +117,7 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef* ltdcHandle)
     PC7     ------> LTDC_G6
     PA11     ------> LTDC_R4
     PA12     ------> LTDC_R5
-    PC10     ------> LTDC_R2
     PD3     ------> LTDC_G7
-    PD6     ------> LTDC_B2
     PG10     ------> LTDC_G3
     PG11     ------> LTDC_B3
     PG12     ------> LTDC_B4
@@ -162,19 +160,19 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef* ltdcHandle)
     GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = HSYNC_Pin|G6_Pin|R2_Pin;
+    GPIO_InitStruct.Pin = HSYNC_Pin|G6_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = G7_Pin|B2_Pin;
+    GPIO_InitStruct.Pin = G7_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
-    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    HAL_GPIO_Init(G7_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = G3_Pin|B4_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -218,9 +216,7 @@ void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef* ltdcHandle)
     PC7     ------> LTDC_G6
     PA11     ------> LTDC_R4
     PA12     ------> LTDC_R5
-    PC10     ------> LTDC_R2
     PD3     ------> LTDC_G7
-    PD6     ------> LTDC_B2
     PG10     ------> LTDC_G3
     PG11     ------> LTDC_B3
     PG12     ------> LTDC_B4
@@ -238,9 +234,9 @@ void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef* ltdcHandle)
     HAL_GPIO_DeInit(GPIOG, R7_Pin|DOTCLK_Pin|G3_Pin|B3_Pin
                           |B4_Pin);
 
-    HAL_GPIO_DeInit(GPIOC, HSYNC_Pin|G6_Pin|R2_Pin);
+    HAL_GPIO_DeInit(GPIOC, HSYNC_Pin|G6_Pin);
 
-    HAL_GPIO_DeInit(GPIOD, G7_Pin|B2_Pin);
+    HAL_GPIO_DeInit(G7_GPIO_Port, G7_Pin);
 
     /* LTDC interrupt Deinit */
     HAL_NVIC_DisableIRQ(LTDC_IRQn);
