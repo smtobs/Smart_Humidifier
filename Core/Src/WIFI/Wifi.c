@@ -1271,7 +1271,7 @@ bool Wifi_TcpIp_StartMqttConnection(uint8_t LinkId,uint16_t dataLen,uint8_t *dat
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == huart5.Instance)
+    if (huart->Instance == huart3.Instance)
     {
     	Wifi_RxCallBack();
     }

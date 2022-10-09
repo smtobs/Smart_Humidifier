@@ -110,19 +110,11 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
-#if (1)
   sensorInit(osPriorityRealtime);
   tftLcdInit(osPriorityHigh);
   workTaskInit(osPriorityAboveNormal);
   eventLoopInit(osPriorityNormal);
   WifiInit(osPriorityLow);
-#else
-  tftLcdInit(osPriorityRealtime);
-  workTaskInit(osPriorityHigh);
-  eventLoopInit(osPriorityAboveNormal);
-  sensorInit(osPriorityNormal);
-
-#endif
   //HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
