@@ -4,7 +4,7 @@
 
 extern UART_HandleTypeDef huart5;
 
-#define		_WIFI_USART                    huart3
+#define		_WIFI_USART                    huart5
 
 #define		_WIFI_RX_SIZE                  512
 #define		_WIFI_RX_FOR_DATA_SIZE         1024

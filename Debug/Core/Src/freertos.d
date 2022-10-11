@@ -53,11 +53,11 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h \
  ../Core/Inc/common.h ../Core/Inc/main.h ../Core/Inc/util.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTask.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/workTask.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -169,7 +169,7 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/event.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h:
 
 ../Core/Inc/common.h:
 
@@ -177,8 +177,8 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/
 
 ../Core/Inc/util.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTask.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/workTask.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/workTaskConfig.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:

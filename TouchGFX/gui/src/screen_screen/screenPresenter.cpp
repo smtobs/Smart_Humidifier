@@ -32,7 +32,7 @@ void screenPresenter::UpdateTemp(int val)
 
 void screenPresenter::UpdateHum(int val)
 {
-	if (val >= 0 && val <= 100)
+	if (val >= 20 && val <= 100)
 	{
 		view.UpdateHumView(val);
 	}

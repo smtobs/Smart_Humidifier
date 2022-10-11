@@ -1,2 +1,2 @@
-sensor.c:15:6:sensorTask	24	static
-sensor.c:66:6:sensorInit	56	static
+sensor.c:17:6:sensorTask	24	static
+sensor.c:68:6:sensorInit	56	static

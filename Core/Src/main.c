@@ -38,10 +38,12 @@
 #include "sensor.h"
 #include "workTask.h"
 #include "event_loop.h"
+#include "mqtt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+extern s_mqtt mqtt;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -107,7 +109,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM7_Init();
   MX_I2C3_Init();
-  MX_USART3_UART_Init();
+  MX_UART5_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
   sensorInit(osPriorityRealtime);
@@ -209,7 +211,61 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if (htim->Instance == TIM7) {
+	switch (mqtt.status)
+	{
+		case 1:
+			if (timeOut >= 100)
+			{
+				mqtt.status = 0;
+				timeOut = 0;
+			}
+			else if ((strstr((char *)Wifi.RxBuffer, "ERROR")) ||
+					 (strstr((char *)Wifi.RxBuffer, "OK")))
+			{
+				char tx_buffer[256] = {0,};
 
+				mqtt.status = 2;
+				timeOut=0;
+
+				Wifi_RxClear();
+				HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)mqtt.msg, mqtt.length, 1000);
+
+			}
+			else
+			{
+				timeOut++;
+			}
+			break;
+
+		case 2:
+			if (timeOut >= 100)
+			{
+				mqtt.status = 0;
+				timeOut = 0;
+			}
+			else if ((strstr((char *)Wifi.RxBuffer, "ERROR")) ||
+					 (strstr((char *)Wifi.RxBuffer, "OK")))
+			{
+				DEBUG_PRINT("OK!");
+				mqtt.status = 0;
+				timeOut=0;
+
+				HAL_TIM_Base_Stop_IT(&htim7);
+
+			}
+			else
+			{
+				timeOut++;
+			}
+			break;
+
+		default:
+			mqtt.status = 0;
+			timeOut = 0;
+			break;
+	}
+  }
   /* USER CODE END Callback 1 */
 }
 

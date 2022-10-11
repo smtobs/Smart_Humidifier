@@ -7,7 +7,6 @@ void Wifi_UserInit(void)
 	Wifi_SetMode(WifiMode_Station);
   //Wifi_SetMode(WifiMode_SoftAp); 
 
-  //while (Wifi_Station_ConnectToAp("L70_9587","33559366",NULL) == false);
 	while (Wifi_Station_ConnectToAp("U+NetC568","P91352@4BB",NULL) == false);
 	//while (Wifi_Station_ConnectToAp("bsoh123","123456789as",NULL) == false);
  

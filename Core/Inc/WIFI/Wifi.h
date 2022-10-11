@@ -1,13 +1,11 @@
 #ifndef	_WIFI_H
 #define	_WIFI_H
-//2017-3-16
+
 #include "WifiConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cmsis_os.h"
 
-//#include "usart.h"
-//#include "gpio.h"
 #include "main.h"
 
 #include <stdbool.h>

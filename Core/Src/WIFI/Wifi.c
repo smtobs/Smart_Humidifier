@@ -1,13 +1,12 @@
 #include "Wifi.h"
 #include "WifiConfig.h"
-//#include "MQTTPacket.h"
-//#include "mqttclient.h"
 #include "mqtt.h"
 #include "common.h"
+#include "ringbuffer.h"
+
+ring_buffer_t wifi_ring_buffer;
 
 Wifi_t	Wifi;
-
-extern char rx_buffer[500];
 
 //#########################################################################################################
 bool Wifi_SendRaw(uint8_t *data,uint16_t len)
@@ -56,12 +55,12 @@ bool Wifi_WaitForString(uint32_t TimeOut_ms,uint8_t *result,uint8_t CountOfParam
 	
 		
 	//////////////////////////////////	
-	for(uint32_t t=0 ; t<TimeOut_ms ; t+=50)
+	for(uint32_t t=0 ; t<TimeOut_ms ; t+=1)
 	{
-		osDelay(50);
+		osDelay(1);
 		for(uint8_t	mx=0 ; mx<CountOfParameter ; mx++)
 		{
-			if(strstr((char*)Wifi.RxBuffer,arg[mx])!=NULL)
+			if(strstr((char*)Wifi.RxBuffer, arg[mx])!=NULL)
 			{
 				*result = mx+1;
 				return true;
@@ -174,6 +173,8 @@ void Wifi_RxClear(void)
 {
 	memset(Wifi.RxBuffer,0,_WIFI_RX_SIZE);
 	Wifi.RxIndex=0;	
+
+	ring_buffer_init(&wifi_ring_buffer);
   HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
 }
 //#########################################################################################################
@@ -193,6 +194,7 @@ void Wifi_RxCallBack(void)
   }
   //--- at command buffer
   //+++  data buffer
+#if (1)
   else                                                                  
   {
     if( HAL_GetTick()-Wifi.RxDataLastTime > 50)
@@ -230,14 +232,15 @@ void Wifi_RxCallBack(void)
     //+++ Fill Data Buffer
     else  
     {      
-      Wifi.RxBufferForData[Wifi.RxIndexForData] = Wifi.usartBuff;
-      if(Wifi.RxIndexForData < _WIFI_RX_FOR_DATA_SIZE)
-        Wifi.RxIndexForData++;
-      if( Wifi.RxIndexForData>= Wifi.RxDataLen)
-      {
-        Wifi.RxIsData=false;         
-        Wifi.GotNewData=true;
-      }
+    	ring_buffer_queue(&wifi_ring_buffer, (char)(Wifi.usartBuff));
+
+        if(Wifi.RxIndexForData < _WIFI_RX_FOR_DATA_SIZE)
+          Wifi.RxIndexForData++;
+        if( Wifi.RxIndexForData>= Wifi.RxDataLen)
+        {
+          Wifi.RxIsData=false;
+          Wifi.GotNewData=true;
+        }
     }
     //--- Fill Data Buffer    
   }           
@@ -261,6 +264,7 @@ void Wifi_RxCallBack(void)
       Wifi.RxDataLastTime = HAL_GetTick();      
     }
   }
+#endif
   //--- check +IPD in At command buffer  
 }
 
@@ -275,22 +279,11 @@ extern int32_t MQTT_Socket;
 
 void WifiTask(void const * argument)
 {
-#if (1)
-
-
-#if (1)
 	DEBUG_PRINT("Start WiFi Task !");
 
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hello\r\n", (uint16_t)strlen("hello\r\n"), 1000);
-
-
 	osDelay(1000);
 	Wifi_SendString("AT\r\n");
  	Wifi_SetRfPower(82);
-
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hello1\r\n", (uint16_t)strlen("hello1\r\n"), 1000);
-
 
     Wifi_TcpIp_GetMultiConnection();
     Wifi_TcpIp_Close(0);
@@ -298,158 +291,29 @@ void WifiTask(void const * argument)
     Wifi_TcpIp_Close(2);
     Wifi_TcpIp_Close(3);
     Wifi_TcpIp_Close(4);
-    Wifi_TcpIp_SetMultiConnection(true);
-
-    HAL_UART_Transmit(&huart1, (uint8_t *)"hello2\r\n", (uint16_t)strlen("hello2\r\n"), 1000);
+    Wifi_TcpIp_SetMultiConnection(false);
+    DEBUG_PRINT("MultiConnection false !");
 
 	Wifi_GetMode();
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hello3\r\n", (uint16_t)strlen("hello3\r\n"), 1000);
-
+	DEBUG_PRINT("Get WiFi..");
 
 	Wifi_Station_DhcpIsEnable();
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hello4\r\n", (uint16_t)strlen("hello4\r\n"), 1000);
+	DEBUG_PRINT("DhcpIsEnable..");
 
 	Wifi_UserInit();
+	DEBUG_PRINT("Wi-Fi Connect");
 
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hello5\r\n", (uint16_t)strlen("hello5\r\n"), 1000);
-#endif
+	do
+	{
 
-	//Wifi_TcpIp_StartTcpConnection(0, "192.168.219.103", 1883, 500);
-	//HAL_UART_Receive_IT(&_WIFI_USART,(uint8_t *)rx_buffer,500);
+	}while (Connect_Broker() == CONNECT_FAIL);
 
-	//Wifi_Connect("U+NetC568","P91352@4BB");
-	//osDelay(5000);
-
-	Connect_Broker("192.168.219.100", "1883");
-	//osSemaphoreRelease(WifiSemHandle);
-	HAL_UART_Transmit(&huart1, (uint8_t *)"Connect_Broker\r\n", (uint16_t)strlen("Connect_Broker\r\n"), 1000);
-
-	osDelay(1000);
-	Subscribe("demoTopic2017");
+	DEBUG_PRINT("Connect Broker !");
 
 	while (1)
 	{
-		//memset(rx_buffer, 0x0, sizeof(rx_buffer));
-		//HAL_UART_Receive_IT(&_WIFI_USART,(uint8_t *)rx_buffer,500);
+		awaitSubscribes();
 		osDelay(1);
-		//DEBUG_PRINT((char *)rx_buffer);
-		//DEBUG_PRINT(Wifi.usartBuff);
-	}
-
-#else
-	unsigned char buffer[128]={0,};
-	MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
-	int len=0;
-	int rc = 0;
-
-	int msgid = 1;
-	MQTTString topicString = MQTTString_initializer;
-	int req_qos = 0;
-	char* payload = "mypayload";
-	int payloadlen = strlen(payload);
-
-	osDelay(3000);
-	//Wifi_SendStringAndWait("AT\r\n",1000);
-	Wifi_SendString("AT\r\n");
- 	Wifi_SetRfPower(82);
- 	HAL_UART_Transmit(&huart1, (uint8_t *)"hllow\r\n", (uint16_t)strlen("hllow\r\n"), 1000);
-    Wifi_TcpIp_GetMultiConnection();
-    Wifi_TcpIp_Close(0);
-    Wifi_TcpIp_Close(1);
-    Wifi_TcpIp_Close(2);
-    Wifi_TcpIp_Close(3);
-    Wifi_TcpIp_Close(4);
-    Wifi_TcpIp_SetMultiConnection(true);
-
-	Wifi_GetMode();
-	Wifi_Station_DhcpIsEnable();
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hllow444\r\n", (uint16_t)strlen("hllow444\r\n"), 1000);
-
-	Wifi_UserInit();
-
-	Wifi_TcpIp_StartTcpConnection(0, "192.168.219.103", 1883, 500);
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hllow555\r\n", (uint16_t)strlen("hllow555\r\n"), 1000);
-
-	// Populate the connect struct.
-
-	connectData.MQTTVersion = 3;
-	connectData.clientID.cstring = "TemperaturePublisher";
-	connectData.keepAliveInterval = 60;
-
-	len = MQTTSerialize_connect(buffer, sizeof(buffer), &connectData);
-
-	Wifi_TcpIp_SendDataTcp(0, (uint16_t)len, (uint8_t *)buffer);
-	HAL_Delay(10000);
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"hllow666\r\n", (uint16_t)strlen("hllow666\r\n"), 1000);
-
-	topicString.cstring = "test";
-	len = MQTTSerialize_subscribe(buffer, sizeof(buffer), 0, msgid, 1, &topicString, &req_qos);
-	Wifi_TcpIp_SendDataTcp(0, (uint16_t)len, (uint8_t *)buffer);
-	HAL_Delay(10000);
-
-
-#if (0)
-	if (len > 0)
-	{
-		HAL_UART_Transmit(&huart1, (uint8_t *)"hllow666\r\n", (uint16_t)strlen("hllow666\r\n"), 1000);
-		HAL_UART_Transmit(&huart1, buffer, len, 1000);
-		HAL_UART_Transmit(&huart1, (uint8_t *)"hllow666\r\n", (uint16_t)strlen("hllow666\r\n"), 1000);
-	}
-	else
-	{
-		HAL_UART_Transmit(&huart1, (uint8_t *)"hllow777\r\n", (uint16_t)strlen("hllow777\r\n"), 1000);
-	}
-#endif
-	//Wifi_TcpIp_SendDataTcp(0, (uint16_t)strlen("Hi"), (uint8_t *)"Hi");
-	//HAL_UART_Transmit(&huart1, (uint8_t *)"hllow666\r\n", (uint16_t)strlen("hllow666\r\n"), 1000);
-#endif
-	while (1)
-	{
-
-	}
-
-	while(1)
-	{	
-		Wifi_GetMyIp();	
-		if((Wifi.Mode==WifiMode_SoftAp) || (Wifi.Mode==WifiMode_StationAndSoftAp))
-		{
-			Wifi_SoftAp_GetConnectedDevices();
-		}
-
-		Wifi_TcpIp_GetConnectionStatus();
-		Wifi_RxClear();
-
-		for(uint8_t i=0; i< 100; i++)
-		{
-#if (1)
-			for(uint8_t ii=0; ii<5 ; ii++)
-				HAL_UART_Transmit(&huart1, (uint8_t *)Wifi.TcpIpConnections[ii].RemoteIp, (uint16_t)strlen(Wifi.TcpIpConnections[ii].RemoteIp), 1000);
-#endif
-		  if( Wifi.GotNewData==true)
-		  {
-			Wifi.GotNewData=false;
-			for(uint8_t ii=0; ii<5 ; ii++)
-			{
-#if (1)
-				char test[64] = {0,};
-
-				sprintf(test, "Wifi.TcpIpConnections[%u].Type=[%s]\r\n", ii, Wifi.TcpIpConnections[ii].Type);
-				HAL_UART_Transmit(&huart1, (uint8_t *)test, (uint16_t)strlen(test), 1000);
-#endif
-			  if((strstr(Wifi.TcpIpConnections[ii].Type,"UDP")!=NULL) && (Wifi.RxDataConnectionNumber==Wifi.TcpIpConnections[ii].LinkId))
-				Wifi_UserGetUdpData(Wifi.RxDataConnectionNumber,Wifi.RxDataLen,Wifi.RxBufferForData);
-			  if((strstr(Wifi.TcpIpConnections[ii].Type,"TCP")!=NULL) && (Wifi.RxDataConnectionNumber==Wifi.TcpIpConnections[ii].LinkId))
-				Wifi_UserGetTcpData(Wifi.RxDataConnectionNumber,Wifi.RxDataLen,Wifi.RxBufferForData);
-			}
-		  }
-		  osDelay(10);
-		}
-		HAL_UART_Transmit(&huart1, (uint8_t *)"userProcess\r\n", (uint16_t)strlen("userProcess\r\n"), 1000);
-		Wifi_UserProcess();
 	}
 }
 //#########################################################################################################
@@ -459,6 +323,10 @@ void WifiTask(void const * argument)
 void WifiInit(osPriority	Priority)
 {
 	HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
+
+	ring_buffer_init(&wifi_ring_buffer);
+
+
 	Wifi_RxClear();
 	Wifi_TxClear();
 	osSemaphoreDef(WifiSemHandle);
@@ -698,13 +566,10 @@ bool	Wifi_Station_ConnectToAp(char *SSID,char *Pass,char *MAC)
 			break;
 		}
 
-#if (1)
 		if( result > 1)
 		{
-			//HAL_UART_Transmit(&huart1, (uint8_t *)"222\r\n", (uint16_t)strlen("222\r\n"), 1000);
 			break;
 		}
-#endif
 		returnVal=true;	
 	}while(0);
 
@@ -1173,19 +1038,17 @@ bool  Wifi_TcpIp_SendDataTcp(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
 
 		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
 		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"TxBuffer)==false\r\n", strlen("TxBuffer)==false\r\n"), 1000);
+			DEBUG_PRINT("Wifi_SendString return == false..");
 			break;
 		}
 
 		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
 		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"OK ERROR\r\n", strlen("OK ERROR\r\n"), 1000);
 			break;
 		}
 
 		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,3,">","ERROR","busy")==false)
 		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"ERROR busy\r\n", strlen("ERROR busy\r\n"), 1000);
 			break;
 		}
 
@@ -1201,7 +1064,6 @@ bool  Wifi_TcpIp_SendDataTcp(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
 
 		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
 		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"Wifi_SendRaw result ERROR\r\n", strlen("Wifi_SendRaw result ERROR\r\n"), 1000);
 			break;
 		}
 		returnVal=true;
@@ -1271,7 +1133,7 @@ bool Wifi_TcpIp_StartMqttConnection(uint8_t LinkId,uint16_t dataLen,uint8_t *dat
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == huart3.Instance)
+    if (huart->Instance == huart5.Instance)
     {
     	Wifi_RxCallBack();
     }

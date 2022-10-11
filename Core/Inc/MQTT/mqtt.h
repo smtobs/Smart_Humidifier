@@ -14,8 +14,6 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-//#include "usart.h"
-//#include "gpio.h"
 #include "main.h"
 
 #include <stdbool.h>
@@ -23,11 +21,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include "MQTTPacket.h"
 
-void Wifi_Connect(char *SSID ,char *Password);
-void Connect_Broker(char *Ip ,char *Port);
-void Subscribe(char *topic);
-void publish(char *topic, char *message);
+typedef struct
+{
+	unsigned char msg[128];
+	int length;
+	int status;
+	MQTTString topicString;
+	char *pubTopic;
+	char *subTopic;
+}s_mqtt;
+
+#define HOST_IP              "192.168.219.100"
+#define HOST_PORT            "1883"
+#define CONNECT_FAIL         0
+#define CONNECT_SUCCESS      1
+
+int Connect_Broker();
+int awaitSubscribes();
+void ayncPublish(char *message);
 
 bool isConnectBroker;
 

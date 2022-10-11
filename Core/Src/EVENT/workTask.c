@@ -17,7 +17,7 @@ extern int e_flag;
 extern bool isConnectBroker;
 //osThreadId 		WifiTaskHandle;
 extern osSemaphoreId 	WifiSemHandle;
-PRODUCT_STATUS   productStatus;
+PRODUCT_STATUS          productStatus;
 
 static char *createJsonMessage()
 {
@@ -65,7 +65,6 @@ static char *createJsonMessage()
     string = cJSON_Print(monitor);
     if (string == NULL)
     {
-
         DEBUG_PRINT("Failed to print monitor.");
     }
 
@@ -78,17 +77,14 @@ static void messageForwardServer()
 {
 	char *message = NULL;
 
-	DEBUG_PRINT("createJsonMessage..");
-
 	message = createJsonMessage();
-
-	publish("test", message);
+	ayncPublish(message);
 
 	if (message)
 	{
 		free(message);
 	}
-	DEBUG_PRINT("publish req");
+
 }
 
 osStatus messageForwardLcdTask(ENV_MSG *envData)
@@ -140,15 +136,15 @@ void _workTask(void const * argument)
 
 				case BUZZER_ON:
 				case BUZZER_OFF:
-					HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
+					/* ToDo */
 					break;
 				case HUM_ON:
 					productStatus = ON;
+					HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, SET);
 					break;
 				case HUM_OFF:
-					//HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
+					HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, RESET);
 					productStatus = OFF;
-					DEBUG_PRINT(debug);
 					break;
 
 				default:

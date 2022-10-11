@@ -1,316 +1,215 @@
 #include "mqtt.h"
+#include "util.h"
+#include "ringbuffer.h"
+#include "event.h"
 
 
-char rx_buffer[500],tx_buffer[150];
-
-uint16_t ProtocolNameLength;
-uint16_t ClientIDLength;
-
-uint8_t connect = 0x10,publishCon = 0x30,subscribeCon = 0x82;
-char *protocolName = "MQTT";
-uint8_t level = 0x04;
-uint8_t flag = 0x02;   // 02--> sifresiz
-uint16_t keepAlive =60;
-uint16_t packetID = 0x01;
-uint8_t Qos = 0x00;
 char *clientID1 = "Topuz1";
-char *clientID2 = "Topuz2";
 
-extern TIM_HandleTypeDef htim7;
-
-void Wifi_Connect(char *SSID ,char *Password)
+s_mqtt mqtt =
 {
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CWMODE=1\r\n",strlen("AT+CWMODE=1\r\n"),1000);
-	HAL_Delay(1000);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CWQAP\r\n",strlen("AT+CWQAP\r\n"),1000);
-	HAL_Delay(1000);
-//	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+RST\r\n",strlen("AT+RST\r\n"),100);
-//	HAL_Delay(5000);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CWJAP=\"%s\",\"%s\"\r\n",SSID,Password),1000);
+		.msg        = {0,},
+		.status       = 0,
+		.topicString  = MQTTString_initializer,
+		.subTopic = "/sub/smart/humidifier",
+		.pubTopic = "/pub/smart/humidifier",
+};
 
+extern TIM_HandleTypeDef     htim7;
+extern ring_buffer_t         wifi_ring_buffer;
+extern osSemaphoreId 	     workHandle;
+extern osThreadId 		     eventLoopTaskHandle;
+
+int transport_getdata(uint8_t *buf, int buflen)
+{
+	int i;
+
+	for (i=0; i<buflen && (!ring_buffer_is_empty(&wifi_ring_buffer)); i++)
+	{
+		ring_buffer_dequeue(&wifi_ring_buffer, (char *)(&buf[i]));
+	}
+
+	return buflen;
 }
-#if (0)
-void Connect_Broker(char *Ip ,char *Port)
-{
-	char msg[128] = {0,};
 
-	snprintf(msg, sizeof(msg), "AT+MQTTCONN=%d,\"%s\",%d,%d\r\n", 0, "192.168.219.100", 1883, 1);
-	HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)msg, strlen(msg), 1000);
-
-	HAL_TIM_Base_Start_IT(&htim7);
-	osSemaphoreWait(WifiSemHandle, osWaitForever);
-}
-#elif (1)
-void Connect_Broker(char *Ip ,char *Port)
+int Connect_Broker()
 {
+	MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
+	unsigned char buffer[128];
+	int buflen = sizeof(buffer);
+	char tx_buffer[256] = {0,};
+	int length;
+
+	uint8_t responMsg = 0xff;
+	uint8_t sessionPresent = 0;
+	uint8_t connack_rc = 0;
+
 	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPCLOSE\r\n",strlen("AT+CIPCLOSE\r\n"),1000);
 	HAL_Delay(100);
 	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPMUX=0\r\n",strlen("AT+CIPMUX=0\r\n"),1000);
 	HAL_Delay(100);
 	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIFSR\r\n",strlen("AT+CIFSR\r\n"),1000);
 	HAL_Delay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSTART=\"TCP\",\"%s\",%s\r\n",Ip,Port),5000);
+	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", HOST_IP, HOST_PORT),5000);
 	HAL_Delay(2000);
 
-	//connect packet
+	connectData.MQTTVersion = 3;
+	connectData.clientID.cstring = clientID1;
+	connectData.keepAliveInterval = 60 * 2;
 
-	ProtocolNameLength = strlen(protocolName);
-	ClientIDLength     = strlen(clientID1);
-	uint8_t Remainlength;
-	Remainlength = 2+ProtocolNameLength+6+ClientIDLength;
-	uint16_t length = sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),(char)ProtocolNameLength,protocolName,(char)level,(char)flag,(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),(char)ClientIDLength,clientID1);
+	length = MQTTSerialize_connect(buffer, buflen, &connectData);
 
 	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d\r\n",length),1000);
 	HAL_Delay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),(char)ProtocolNameLength,protocolName,(char)level,(char)flag,(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),(char)ClientIDLength,clientID1),5000);
 
-	isConnectBroker = true;
-}
-#else
-void Connect_Broker(char *Ip ,char *Port)
-{
-	uint8_t Remainlength;
-	uint16_t length;
+	Wifi_RxClear();
+	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)buffer, length, 1000);
+	HAL_Delay(100);
 
-#if (0)
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPCLOSE\r\n",strlen("AT+CIPCLOSE\r\n"),1000);
-	osDelay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPMUX=0\r\n",strlen("AT+CIPMUX=0\r\n"),1000);
-	osDelay(100);
-#else
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPCLOSE\r\n",strlen("AT+CIPCLOSE\r\n"),1000);
-	osDelay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPMUX=1\r\n",strlen("AT+CIPMUX=1\r\n"),1000);
-	osDelay(100);
-#endif
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIFSR\r\n",strlen("AT+CIFSR\r\n"),1000);
-	osDelay(100);
-
-	//HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSTART=\"TCP\",\"%s\",%s\r\n",Ip,Port),5000);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSTART=%d,\"TCP\",\"%s\",%s\r\n", 0, Ip, Port),5000);
-	//sprintf((char*)Wifi.TxBuffer,"AT+CIPSTART=%d,\"TCP\",\"%s\",%d,%d\r\n",LinkId,RemoteIp,RemotePort,TimeOut);
-	osDelay(2000);
-
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSTART=%d,\"TCP\",\"%s\",%s\r\n", 1, Ip, Port),5000);
-	osDelay(2000);
-	//connect packet
-
-	ProtocolNameLength = strlen(protocolName);
-	ClientIDLength     = strlen(clientID1);
-
-	Remainlength = 2+ProtocolNameLength+6+ClientIDLength;
-	length = sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",
-												(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),
-												(char)ProtocolNameLength,protocolName,(char)level,(char)flag,
-												(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),
-												(char)ClientIDLength,clientID1);
-
-	//HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d\r\n",length),1000);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d,%d\r\n", 0, length),1000);
-	osDelay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",
-												(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),
-												(char)ProtocolNameLength,protocolName,(char)level,(char)flag,
-												(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),
-												(char)ClientIDLength,clientID1),5000);
-	osDelay(1000);
-
-
-	ProtocolNameLength = strlen(protocolName);
-	ClientIDLength     = strlen(clientID2);
-
-	Remainlength = 2+ProtocolNameLength+6+ClientIDLength;
-	length = sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",
-												(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),
-												(char)ProtocolNameLength,protocolName,(char)level,(char)flag,
-												(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),
-												(char)ClientIDLength,clientID2);
-
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d,%d\r\n", 1, length),1000);
-	osDelay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%s%c%c%c%c%c%c%s",
-											(char)connect,(char)Remainlength,(char)(ProtocolNameLength << 8),
-											(char)ProtocolNameLength,protocolName,(char)level,(char)flag,
-											(char)(keepAlive << 8),(char)keepAlive,(char)(ClientIDLength << 8),
-											(char)ClientIDLength,clientID2),5000);
-	osDelay(1000);
-
-
-	isConnectBroker = true;
-}
-#endif
-void Subscribe(char *topic)
-{
-	uint16_t TopicLength = strlen(topic);
-	uint8_t RemainLength = 2+2+TopicLength+1; // packetIDlength(2) + topiclengthdata(2)+topiclength+Qos
-	uint16_t length = sprintf(tx_buffer,"%c%c%c%c%c%c%s%c",(char)subscribeCon,(char)RemainLength,(char)(packetID << 8),(char)packetID,(char)(TopicLength << 8),(char)TopicLength,topic,(char)Qos);
-
-
-
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d\r\n",length),1000);
-	//HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d,%d\r\n", 0, length),1000);
-	osDelay(100);
-	//HAL_TIM_Base_Start_IT(&htim7);
-	//osSemaphoreWait(WifiSemHandle, osWaitForever);
-	//Wifi_RxClear();
-
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%c%c%s%c",(char)subscribeCon,(char)RemainLength,(char)(packetID << 8),(char)packetID,(char)(TopicLength << 8),(char)TopicLength,topic,(char)Qos),5000);
-
-	//Wifi_RxClear();
-	//HAL_TIM_Base_Start_IT(&htim7);
-	//osSemaphoreWait(WifiSemHandle, osWaitForever);
-
-}
-
-#if (0)
-void publish(char *topic, char *message)
-{
-
-	uint16_t topiclength = strlen(topic);
-	uint8_t remainlength = 2+topiclength+strlen(message);
-	int length = sprintf(tx_buffer,"%c%c%c%c%s%s",(char)publishCon,(char)remainlength,(char)(topiclength << 8),(char)topiclength,topic,message);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d\r\n",length),100);
-	osDelay(100);
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%s%s",(char)publishCon,(char)remainlength,(char)(topiclength << 8),(char)topiclength,topic,message),5000);
-	osDelay(100);
-}
-#elif (1)
-void publish(char *topic, char *message)
-{
-
-	if (!message || !(*message))
+	responMsg = MQTTPacket_read(buffer, length, transport_getdata);
+	if ((responMsg != CONNACK) || (MQTTDeserialize_connack(&sessionPresent, &connack_rc, buffer, length) != 1 || connack_rc != 0))
 	{
-		return;
+		isConnectBroker = false;
+
+		return CONNECT_FAIL;
 	}
-	uint16_t topiclength = strlen(topic);
-	uint8_t remainlength = 2+topiclength+strlen(message);
-
-	int length = sprintf(tx_buffer,"%c%c%c%c%s%s",(char)publishCon,(char)remainlength,(char)(topiclength << 8),(char)topiclength,topic,message);
-
-	Wifi_RxClear();
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d\r\n",length),100);
-	//HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"AT+CIPSEND=%d,%d\r\n",0, length),100);
-	HAL_TIM_Base_Start_IT(&htim7);
-	osSemaphoreWait(WifiSemHandle, osWaitForever);
-
-	Wifi_RxClear();
-	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer,sprintf(tx_buffer,"%c%c%c%c%s%s",(char)publishCon,(char)remainlength,(char)(topiclength << 8),(char)topiclength,topic,message),5000);
-	HAL_TIM_Base_Start_IT(&htim7);
-	osSemaphoreWait(WifiSemHandle, osWaitForever);
-
+	isConnectBroker = true;
+	return CONNECT_SUCCESS;
 }
-#else
-void publish(char *topic, char *message)
+
+void mqttMessageHandling(const unsigned char *payLoad, const int payloadLen)
 {
-	int LinkId=0; // Todo
+	char message[128]={0,};
 
-	//osSemaphoreWait(WifiSemHandle, osWaitForever);
+	snprintf(message, sizeof(message), "%.*s", payloadLen, payLoad);
 
-	uint16_t topiclength = strlen(topic);
-	uint8_t remainlength = 2+topiclength+strlen(message);
+	if (!strncmp(message, "RUN", sizeof("RUN")))
+	{
+		DEBUG_PRINT("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		osSignalSet(eventLoopTaskHandle, BUZZER_ON | HUM_ON);
+	}
+	else if (!strncmp(message, "STOP", sizeof("STOP")))
+	{
+		DEBUG_PRINT("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		osSignalSet(eventLoopTaskHandle, BUZZER_OFF | HUM_OFF);
+	}
+	DEBUG_PRINT(message);
+}
 
-	memset(tx_buffer, 0x0, sizeof(tx_buffer));
+void PacketProcessing()
+{
+	unsigned char buffer[128];
+	int buflen = sizeof(buffer);
+	int messageType;
 
-	int length = sprintf(tx_buffer,"%c%c%c%c%s%s", (char)publishCon, (char)remainlength, (char)(topiclength << 8), (char)topiclength,topic ,message);
+	while (true)
+	{
+		unsigned char retained, dup;
+		unsigned char* payload_in;
+		unsigned short msgid, submsgid;
+		int payloadlen_in, qos, subcount;
+		MQTTString receivedTopic;
+
+		messageType = MQTTPacket_read(buffer, buflen, transport_getdata);
+		switch (messageType)
+		{
+			case SUBACK:
+				MQTTDeserialize_suback(&submsgid, 1, &subcount, &qos, buffer, buflen);
+				Wifi_RxClear();
+				break;
+
+			case PUBLISH:
+				if (MQTTDeserialize_publish(&dup, &qos, &retained, &msgid, &receivedTopic,
+						&payload_in, &payloadlen_in, buffer, buflen) == 1)
+				{
+					mqttMessageHandling(payload_in, payloadlen_in);
+					Wifi_RxClear();
+				}
+				return;
+
+			default :
+				Wifi_RxClear();
+				return;
+		}
+		osSemaphoreRelease(workHandle);
+		osDelay(1000);
+	}
+}
+
+int awaitSubscribes()
+{
+	char tx_buffer[256] = {0,};
+	int req_qos = 0, len;
+	unsigned char buffer[128];
+	uint32_t waitTime = 500;
+	uint8_t atCommandResult;
+
+	MQTTString topic = MQTTString_initializer;
+	topic.cstring = mqtt.subTopic;
 
 	do
 	{
-		Wifi_RxClear();
+		osDelay(1);
+	}while (mqtt.status != 0);
 
-		if (Wifi.TcpIpMultiConnection == false)
-		{
-			 sprintf((char*)Wifi.TxBuffer, "AT+CIPSEND=%d\r\n", length);
-		}
-		else
-		{
-			sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d,%d\r\n", LinkId, length);
-		}
-
-		if (Wifi_SendString((char*)Wifi.TxBuffer) == false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"TxBuffer)==false\r\n", strlen("TxBuffer)==false\r\n"), 1000);
-			break;
-		}
-
-		HAL_TIM_Base_Start_IT(&htim7);
-		osSemaphoreWait(WifiSemHandle, osWaitForever);
-
-		Wifi_RxClear();
-		Wifi_SendRaw((uint8_t*)tx_buffer, length);
-
-		//Wifi_SendRaw((uint8_t*)tx_buffer, sprintf(tx_buffer,"%c%c%c%c%s%s",
-			//								(char)publishCon, (char)remainlength, (char)(topiclength << 8), (char)topiclength, topic, message));
-		//Wifi_SendRaw((uint8_t*)tx_buffer, sprintf(tx_buffer,"%c%c%c%c%s%s",
-			//								(char)publishCon, (char)remainlength, (char)(topiclength << 8), (char)topiclength, topic, message));
-
-		/* CallBack... */
-		HAL_TIM_Base_Start_IT(&htim7);
-		osSemaphoreWait(WifiSemHandle, osWaitForever);
-
-	} while (0);
-}
-
-#endif
-
-
-
-#if (0)
-
-ool  Wifi_TcpIp_SendDataTcp(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
+	len = MQTTSerialize_subscribe(buffer, sizeof(buffer), 0, 1, 1, &topic, &req_qos);
+	if (len <= 0)
 	{
-		Wifi_RxClear();
-		if(Wifi.TcpIpMultiConnection==false)
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d\r\n",dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d\r\n",dataLen);
-		}
-		else
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d,%d\r\n",LinkId,dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d,%d\r\n",LinkId,dataLen);
-		}
+		DEBUG_PRINT("len <= 0");
+		goto end;
+	}
 
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"TxBuffer)==false\r\n", strlen("TxBuffer)==false\r\n"), 1000);
-			break;
-		}
+	Wifi_RxClear();
+	HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSEND=%d\r\n", len), 100);
 
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"OK ERROR\r\n", strlen("OK ERROR\r\n"), 1000);
-			break;
-		}
+	if (Wifi_WaitForString(waitTime, &atCommandResult, 2, "OK", "ERROR") == false)
+	{
+		DEBUG_PRINT("Time Out !");
+		goto end;
+	}
 
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,3,">","ERROR","busy")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"ERROR busy\r\n", strlen("ERROR busy\r\n"), 1000);
-			break;
-		}
+	Wifi_RxClear();
+	HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)buffer, len, 100);
 
-#if (0)
-		if(result > 1)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"result\r\n", strlen("result\r\n"), 1000);
-			break;
-		}
-#endif
-		Wifi_RxClear();
-		Wifi_SendRaw(data,dataLen);
+	if (Wifi_WaitForString(waitTime, &atCommandResult, 2, "OK", "ERROR") == false)
+	{
+		DEBUG_PRINT("Time Out !");
+		goto end;
+	}
+	osDelay(100);
 
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"Wifi_SendRaw result ERROR\r\n", strlen("Wifi_SendRaw result ERROR\r\n"), 1000);
-			break;
-		}
-		returnVal=true;
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;
+	PacketProcessing();
+
+	end :
+	osSemaphoreRelease(workHandle);
+	osDelay(1000);
+	return 0;
 }
-#endif
+
+void ayncPublish(char *message)
+{
+	if (mqtt.status == 0)
+	{
+		char tx_buffer[128] = {0,};
+
+		if (!message || !(*message))
+		{
+			return;
+		}
+		memset(mqtt.msg, 0x0, sizeof(mqtt.msg));
+
+		mqtt.topicString.cstring = mqtt.pubTopic;
+		mqtt.length = MQTTSerialize_publish(mqtt.msg, sizeof(mqtt.msg), 0, 0, 0, 0,
+				mqtt.topicString, (unsigned char *)message, strlen(message));
+
+		if (osSemaphoreWait(workHandle, osWaitForever) == osOK)
+		{
+			mqtt.status = 1;
+
+			Wifi_RxClear();
+			HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSEND=%d\r\n", mqtt.length), 100);
+			HAL_TIM_Base_Start_IT(&htim7);
+		}
+	}
+	return;
+}

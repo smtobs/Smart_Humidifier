@@ -1,4 +1,6 @@
-mqtt.c:21:6:Wifi_Connect	16	static
-mqtt.c:44:6:Connect_Broker	88	static
-mqtt.c:142:6:Subscribe	56	static
-mqtt.c:178:6:publish	48	static
+mqtt.c:23:5:transport_getdata	24	static
+mqtt.c:35:5:Connect_Broker	496	static
+mqtt.c:80:6:mqttMessageHandling	152	static
+mqtt.c:99:6:PacketProcessing	216	static
+mqtt.c:139:5:awaitSubscribes	440	static
+mqtt.c:189:6:ayncPublish	184	static

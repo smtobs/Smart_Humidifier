@@ -1,6 +1,6 @@
 Core/Src/MQTT/mqtt.o: ../Core/Src/MQTT/mqtt.c \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/MQTT/mqtt.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -39,8 +39,8 @@ Core/Src/MQTT/mqtt.o: ../Core/Src/MQTT/mqtt.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
@@ -58,11 +58,23 @@ Core/Src/MQTT/mqtt.o: ../Core/Src/MQTT/mqtt.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/main.h
+ ../Core/Inc/main.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPacket.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTConnect.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPublish.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTSubscribe.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTUnsubscribe.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTFormat.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/StackTrace.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPacket.h \
+ ../Core/Inc/util.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h \
+ ../Core/Inc/common.h ../Core/Inc/util.h
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/MQTT/mqtt.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/MQTT/mqtt.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
 
 ../Core/Inc/usart.h:
 
@@ -142,9 +154,9 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/W
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -181,3 +193,29 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/WIFI/W
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
 ../Core/Inc/main.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPacket.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTConnect.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPublish.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTSubscribe.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTUnsubscribe.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTFormat.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/StackTrace.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Middlewares/MQTTPacket/src/MQTTPacket.h:
+
+../Core/Inc/util.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h:
+
+../Core/Inc/common.h:
+
+../Core/Inc/util.h:

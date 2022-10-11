@@ -12,6 +12,8 @@ extern osThreadId eventLoopTask;
 extern osThreadId defaultTaskHandle;
 extern osThreadId eventLoopTaskHandle;
 
+#define TEST
+
 void sensorTask(void const * argument)
 {
 	  uint8_t status = 0;
@@ -21,10 +23,12 @@ void sensorTask(void const * argument)
 
 	  while (1)
 	  {
-		  //dht11Start(&dht11Dev);
-		  //status = dht11CheckResponse(&dht11Dev);
+#if !defined (TEST)
+		  dht11Start(&dht11Dev);
+		  status = dht11CheckResponse(&dht11Dev);
 
-		  //if (status == DHT11_SUCCESS)
+		  if (status == DHT11_SUCCESS)
+#endif
 		  {
 #if (0)
 			  	if ( ((Rh_byte1 = dht11Read(&dht11Dev)) == 255) ||
@@ -36,15 +40,13 @@ void sensorTask(void const * argument)
 			  		goto error;
 			  	}
 #endif
-#if (0)
+#if !defined (TEST)
 				Rh_byte1 = dht11Read(&dht11Dev);
 				Rh_byte2 = dht11Read(&dht11Dev);
 				Temp_byte1 = dht11Read(&dht11Dev);
 				Temp_byte2 = dht11Read(&dht11Dev);
 				SUM = dht11Read(&dht11Dev);
-#endif
-
-#if (1)
+#else
 				Rh_byte1 = (uint8_t)72;
 				Temp_byte1 = (uint8_t)26;
 #endif

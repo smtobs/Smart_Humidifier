@@ -1,5 +1,5 @@
 Core/Src/SENSOR/dht11.o: ../Core/Src/SENSOR/dht11.c \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/SENSOR/dht11.h \
  ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -38,7 +38,7 @@ Core/Src/SENSOR/dht11.o: ../Core/Src/SENSOR/dht11.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/test2/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
 
 ../Core/Inc/main.h:
 

@@ -1,6 +1,6 @@
 workTask.c:22:14:createJsonMessage	32	static
-workTask.c:77:13:messageForwardServer	16	static
-workTask.c:94:10:messageForwardLcdTask	16	static
-workTask.c:99:6:sensorEventHandling	16	static
-workTask.c:115:6:_workTask	64	static
-workTask.c:162:6:workTaskInit	56	static
+workTask.c:76:13:messageForwardServer	16	static
+workTask.c:90:10:messageForwardLcdTask	16	static
+workTask.c:95:6:sensorEventHandling	16	static
+workTask.c:111:6:_workTask	64	static
+workTask.c:158:6:workTaskInit	56	static
