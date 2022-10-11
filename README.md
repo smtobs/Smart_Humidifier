@@ -3,9 +3,9 @@
  : 주요 사항으로 기구 작업, 부저 드라이버, UI 제작 등이 필요.
  
  * 개발 환경
-  - 언어 C, C++
-  - OS : FreeRTOS
-  - IDE : CubeIDE
+  : 언어 C, C++
+  : OS : FreeRTOS
+  : IDE : CubeIDE
  
 - 디스플레이 : TFT LCD
   : touchGFX 라이브러리 사용
