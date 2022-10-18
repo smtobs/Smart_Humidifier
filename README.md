@@ -7,6 +7,8 @@
   : OS : FreeRTOS
   : IDE : CubeIDE
  
+- MCU : STM32f429I Discovery 
+
 - 디스플레이 : TFT LCD
   : touchGFX 라이브러리 사용
 
