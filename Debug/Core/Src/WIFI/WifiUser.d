@@ -1,6 +1,6 @@
 Core/Src/WIFI/WifiUser.o: ../Core/Src/WIFI/WifiUser.c \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -22,6 +22,9 @@ Core/Src/WIFI/WifiUser.o: ../Core/Src/WIFI/WifiUser.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
@@ -48,19 +51,14 @@ Core/Src/WIFI/WifiUser.o: ../Core/Src/WIFI/WifiUser.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/main.h
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../Core/Inc/main.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/Wifi.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/WIFI/WifiConfig.h:
 
 ../Core/Inc/usart.h:
 
@@ -105,6 +103,12 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h:
 
@@ -158,20 +162,10 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
 ../Core/Inc/main.h:
+
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:

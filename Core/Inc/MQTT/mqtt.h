@@ -22,25 +22,32 @@
 #include <string.h>
 #include <stdarg.h>
 #include "MQTTPacket.h"
+#include "network.h"
+
+//extern socketInfo network;
 
 typedef struct
 {
 	unsigned char msg[128];
 	int length;
 	int status;
-	MQTTString topicString;
-	char *pubTopic;
 	char *subTopic;
+	char *pubTopic;
+	MQTTString topicString;
+	socketInfo network;
+	int (*getfp)(uint8_t *, int);
 }s_mqtt;
 
-#define HOST_IP              "192.168.219.100"
+#define HOST_IP              "192.168.162.227"
 #define HOST_PORT            "1883"
 #define CONNECT_FAIL         0
 #define CONNECT_SUCCESS      1
 
-int Connect_Broker();
-int awaitSubscribes();
-void ayncPublish(char *message);
+bool mqttInit();
+int connectBroker(s_mqtt *);
+void publish(char *);
+int subscribe(s_mqtt *);
+enum msgTypes PacketProcessing(s_mqtt *mqtt);
 
 bool isConnectBroker;
 

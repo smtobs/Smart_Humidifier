@@ -6,50 +6,51 @@
  */
 
 #include "event_loop.h"
-#include "dht11.h"
+
+extern osEventFlagsId_t eventFlagHandle;
 
 void eventLoopTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-	osEvent evt;
-	int32_t i;
+	uint32_t eventFlag;
+
 	DEBUG_PRINT("eventLoopTask..");
+
   /* Infinite loop */
   for (;;)
   {
-		evt = osSignalWait(0x00FF, 50);
-		if (evt.status == osEventSignal)
+	    eventFlag = osEventFlagsWait(eventFlagHandle, 0x00FF, osFlagsWaitAny, osWaitForever);
 		{
-			for (i=0; i<=5; i++)
-			{
-				switch ((evt.value.signals) & (1U << i))
+				switch (eventFlag)
 				{
-					case UPDATE_SENSOR_VALUE:
-						ring_buffer_queue(&ring_buffer, (char)(evt.value.signals) & (1U << i));
+					case WIFI_SEND_REP:
+						DEBUG_PRINT("WIFI_SEND_REP");
+						ring_buffer_queue(&ring_buffer, (unsigned char)WIFI_SEND_REP);
 						break;
 
-					case BUZZER_ON:
-					case BUZZER_OFF:
+					case UART_RECEIVE:
+						DEBUG_PRINT("UART_RECEIVE");
+						ring_buffer_queue(&ring_buffer, (unsigned char)UART_RECEIVE);
+						break;
+
+					case UPDATE_SENSOR_VALUE:
+						ring_buffer_queue(&ring_buffer, (unsigned char)UPDATE_SENSOR_VALUE);
+						break;
+
 					case HUM_ON:
+						ring_buffer_queue(&ring_buffer, (unsigned char)HUM_ON);
+						break;
+
 					case HUM_OFF:
 
-						ring_buffer_queue(&ring_buffer, (char)(evt.value.signals) & (1U << i));
+						ring_buffer_queue(&ring_buffer, (unsigned char)HUM_OFF);
 						break;
 
 					default:
 						break;
 				}
-			}
 		}
 		osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
-}
-
-void eventLoopInit(osPriority Priority)
-{
-	osSemaphoreDef(eventLoopHandle);
-	eventLoopHandle = osSemaphoreCreate(osSemaphore(eventLoopHandle), 1);
-	osThreadDef(eventLoopTaskName, eventLoopTask, Priority, 0, _EVENT_LOOP_TASK_SIZE);
-	eventLoopTaskHandle = osThreadCreate(osThread(eventLoopTaskName), NULL);
 }

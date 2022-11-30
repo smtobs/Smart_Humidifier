@@ -38,7 +38,7 @@ RM := rm -rf
 -include TouchGFX/App/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
--include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
 -include Middlewares/MQTTPacket/src/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
@@ -137,8 +137,8 @@ all: main-build
 main-build: SmartHumidfier.elf secondary-outputs
 
 # Tool invocations
-SmartHumidfier.elf: $(OBJS) $(USER_OBJS) C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\2022_10_09_commit\SmartHumidfier\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "SmartHumidfier.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\2022_10_09_commit\SmartHumidfier\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SmartHumidfier.map" -Wl,--gc-sections -static -Wl,--start-group -l:libtouchgfx-float-abi-hard.a -Wl,--end-group -L"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\2022_10_09_commit\SmartHumidfier\Middlewares\ST\touchgfx\lib\core\cortex_m4f\gcc" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+SmartHumidfier.elf: $(OBJS) $(USER_OBJS) C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\11_06_test\2022_10_09_commit\SmartHumidfier\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "SmartHumidfier.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\11_06_test\2022_10_09_commit\SmartHumidfier\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SmartHumidfier.map" -Wl,--gc-sections -static -Wl,--start-group -l:libtouchgfx-float-abi-hard.a -Wl,--end-group -L"C:\Users\v7dd1\STM32CubeIDE\workspace_1.6.1\11_06_test\2022_10_09_commit\SmartHumidfier\Middlewares\ST\touchgfx\lib\core\cortex_m4f\gcc" -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

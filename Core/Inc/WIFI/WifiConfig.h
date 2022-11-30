@@ -18,5 +18,6 @@ extern UART_HandleTypeDef huart5;
 #define		_WIFI_WAIT_TIME_VERYHIGH       60000
 
 
+#define USE_WIFI
 
 #endif

@@ -1,5 +1,5 @@
 Core/Src/EVENT/event_loop.o: ../Core/Src/EVENT/event_loop.c \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop.h \
  ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -20,6 +20,9 @@ Core/Src/EVENT/event_loop.o: ../Core/Src/EVENT/event_loop.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
@@ -38,8 +41,8 @@ Core/Src/EVENT/event_loop.o: ../Core/Src/EVENT/event_loop.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/common.h ../Core/Inc/main.h ../Core/Inc/util.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
@@ -49,18 +52,11 @@ Core/Src/EVENT/event_loop.o: ../Core/Src/EVENT/event_loop.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/SENSOR/dht11.h
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop.h:
 
 ../Core/Inc/main.h:
 
@@ -104,6 +100,12 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
 
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
+
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h:
@@ -144,9 +146,9 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Core/Inc/util.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/EVENT/event_loop_config.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -166,22 +168,8 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:
-
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/SENSOR/dht11.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/RINGBUFFER/ringbuffer.h:

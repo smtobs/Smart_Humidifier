@@ -1,4 +1,0 @@
-mqtt.c:21:6:Wifi_Connect	16	static
-mqtt.c:44:6:Connect_Broker	88	static
-mqtt.c:142:6:Subscribe	56	static
-mqtt.c:178:6:publish	48	static

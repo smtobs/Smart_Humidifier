@@ -1,5 +1,5 @@
 Core/Src/TFT_LCD/tft_lcd.o: ../Core/Src/TFT_LCD/tft_lcd.c \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h \
  ../Core/Inc/common.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -21,6 +21,9 @@ Core/Src/TFT_LCD/tft_lcd.o: ../Core/Src/TFT_LCD/tft_lcd.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
@@ -39,7 +42,7 @@ Core/Src/TFT_LCD/tft_lcd.o: ../Core/Src/TFT_LCD/tft_lcd.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/util.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
@@ -49,19 +52,13 @@ Core/Src/TFT_LCD/tft_lcd.o: ../Core/Src/TFT_LCD/tft_lcd.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h \
- c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\lcd.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h \
+ c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\lcd.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd.h:
 
 ../Core/Inc/common.h:
 
@@ -107,6 +104,12 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
 
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
+
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h:
@@ -143,7 +146,7 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Core/Inc/util.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Core/Inc/TFT_LCD/tft_lcd_config.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -163,24 +166,12 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Cor
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
+c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\lcd.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/ili9341/ili9341.h:
-
-c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\lcd.h:
-
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/Components/Common/lcd.h:

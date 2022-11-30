@@ -1,6 +1,9 @@
-freertos.c:83:13:vApplicationIdleHook	4	static
-freertos.c:98:13:vApplicationStackOverflowHook	16	static
-freertos.c:107:13:vApplicationMallocFailedHook	4	static
-freertos.c:126:6:vApplicationGetIdleTaskMemory	24	static
-freertos.c:140:6:MX_FREERTOS_Init	72	static
-freertos.c:192:6:StartDefaultTask	16	static
+freertos.c:132:13:vApplicationIdleHook	4	static
+freertos.c:147:13:vApplicationStackOverflowHook	16	static
+freertos.c:156:13:vApplicationMallocFailedHook	4	static
+freertos.c:176:6:MX_FREERTOS_Init	8	static
+freertos.c:243:6:StartDefaultTask	16	static
+freertos.c:262:6:_TouchGFX_Task	16	static
+freertos.c:283:6:___eventHandler	16	static
+freertos.c:302:6:_eventLoopTask	16	static
+freertos.c:315:6:CallbackUpdateSensor	16	static

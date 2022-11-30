@@ -17,6 +17,9 @@ extern UART_HandleTypeDef huart1;
 #define MAX_DEBUG_BUFF   2048
 #define DEBUG_UART       huart1
 
+#define SUCCESS          1
+#define FAIL             0
+
 #define DEBUG_PRINT(X)   _debugPrint(X, __FILE__, __FUNCTION__, __LINE__)
 
 void _debugPrint(char *, char *, const char*, int );

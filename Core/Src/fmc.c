@@ -82,6 +82,7 @@ void MX_FMC_Init(void)
   /* USER CODE BEGIN FMC_Init 2 */
   else
   {
+
       __IO uint32_t tmpmrd =0;
       FMC_SDRAM_CommandTypeDef Command;
 
@@ -97,7 +98,7 @@ void MX_FMC_Init(void)
       /* Step 2: Insert 100 us minimum delay */
       /* Inserted delay is equal to 1 ms due to systick time base unit (ms) */
       HAL_Delay(100);
-
+#if (1)
       /* Step 3: Configure a PALL (precharge all) command */
       Command.CommandMode             = FMC_SDRAM_CMD_PALL;
       Command.CommandTarget           = FMC_SDRAM_CMD_TARGET_BANK2;
@@ -140,9 +141,11 @@ void MX_FMC_Init(void)
        *  refresh rate  = 64ms / 4096 = 15.62us
        *  refresh count = (refresh rate x SDRAM clock frequency) - 20
        *  refresh count = 15.62us x 90MHz - 20 = 1385.xx
+       *  refresh count = 15.62us x 36MHz - 20 = 542.xx
        *
        */
       HAL_SDRAM_ProgramRefreshRate(&hsdram1, 1386);
+#endif
   }
   /* USER CODE END FMC_Init 2 */
 }

@@ -17,6 +17,7 @@ public:
     //virtual void UpdateTemp(char *val)
     virtual void UpdateTemp(int) {};
     virtual void UpdateHum(int) {};
+    virtual void ChkUpdateOnOffButton(bool) {};
 protected:
     Model* model;
 };

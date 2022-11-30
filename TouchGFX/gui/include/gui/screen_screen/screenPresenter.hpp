@@ -31,6 +31,7 @@ public:
 
     virtual void UpdateTemp(int);
     virtual void UpdateHum(int);
+    virtual void ChkUpdateOnOffButton(bool);
 
 private:
     screenPresenter();

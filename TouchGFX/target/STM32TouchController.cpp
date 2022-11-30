@@ -51,7 +51,7 @@ bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
     BSP_TS_GetState(&TS_State);
     if (TS_State.TouchDetected)
     {
-    	char buf[128] = {0,};
+    	//char buf[128] = {0,};
 
         x = TS_State.X;
         y = TS_State.Y;

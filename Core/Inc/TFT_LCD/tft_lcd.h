@@ -21,7 +21,8 @@
 osThreadId 		lcdTaskHandle;
 osSemaphoreId 	lcdHandle;
 
-void tftLcdInit(osPriority);
+//void tftLcdInit(osPriority);
+void LcdDrvStart(void);
 //void lcdTask(void const *);
 
 

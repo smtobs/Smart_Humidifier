@@ -13,6 +13,8 @@ public:
     virtual void tearDownScreen();
     virtual void HumidifierControlButtonState();
     virtual void updateOnOffButtonState();
+    virtual void updateOnButton();
+    virtual void updateOffButton();
     virtual void UpdateTempView(int);
     virtual void UpdateHumView(int);
 protected:

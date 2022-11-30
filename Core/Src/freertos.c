@@ -27,9 +27,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "event.h"
-#include "workTask.h"
-
+#include "eventHandlerTask.h"
 #include "ringbuffer.h"
+#include "mqtt.h"
+#include "tft_lcd.h"
+#include "Wifi.h"
+#include "sensor.h"
+#include "event_loop.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,30 +53,75 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-osThreadId        touchGFXTaskHandle;
-extern osThreadId workTaskHandle;
-osSemaphoreId     envSemHandle;
-osPoolId          Pool_ID;
-
+osThreadId           touchGFXTaskHandle;
+extern osThreadId    workTaskHandle;
+osSemaphoreId        envSemHandle;
+extern s_mqtt        mqttSubscribe;
+extern s_mqtt        mqttPublish;
 extern ring_buffer_t ring_buffer;
 int e_flag;
-
 /* USER CODE END Variables */
-osThreadId defaultTaskHandle;
-osMessageQId envQueueHandle;
-osSemaphoreId sensorSemHandle;
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 4096 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for lcdTask */
+osThreadId_t lcdTaskHandle;
+const osThreadAttr_t lcdTask_attributes = {
+  .name = "lcdTask",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for eventHandlerTas */
+osThreadId_t eventHandlerTasHandle;
+const osThreadAttr_t eventHandlerTas_attributes = {
+  .name = "eventHandlerTas",
+  .stack_size = 2048 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for event_loop_task */
+osThreadId_t event_loop_taskHandle;
+const osThreadAttr_t event_loop_task_attributes = {
+  .name = "event_loop_task",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
+/* Definitions for envQueue */
+osMessageQueueId_t envQueueHandle;
+const osMessageQueueAttr_t envQueue_attributes = {
+  .name = "envQueue"
+};
+/* Definitions for updateSensorTimer */
+osTimerId_t updateSensorTimerHandle;
+const osTimerAttr_t updateSensorTimer_attributes = {
+  .name = "updateSensorTimer"
+};
+/* Definitions for sensorSem */
+osSemaphoreId_t sensorSemHandle;
+const osSemaphoreAttr_t sensorSem_attributes = {
+  .name = "sensorSem"
+};
+/* Definitions for eventFlag */
+osEventFlagsId_t eventFlagHandle;
+const osEventFlagsAttr_t eventFlag_attributes = {
+  .name = "eventFlag"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 void TouchGFX_Task(void const * argument);
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const * argument);
+void StartDefaultTask(void *argument);
+void _TouchGFX_Task(void *argument);
+void ___eventHandler(void *argument);
+void _eventLoopTask(void *argument);
+void CallbackUpdateSensor(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
-
-/* GetIdleTaskMemory prototype (linked to static allocation support) */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
 
 /* Hook prototypes */
 void vApplicationIdleHook(void);
@@ -119,19 +168,6 @@ __weak void vApplicationMallocFailedHook(void)
 }
 /* USER CODE END 5 */
 
-/* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
-static StaticTask_t xIdleTaskTCBBuffer;
-static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
-
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
-{
-  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
-  *ppxIdleTaskStackBuffer = &xIdleStack[0];
-  *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-  /* place for user code */
-}
-/* USER CODE END GET_IDLE_TASK_MEMORY */
-
 /**
   * @brief  FreeRTOS initialization
   * @param  None
@@ -148,37 +184,52 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_MUTEX */
 
   /* Create the semaphores(s) */
-  /* definition and creation of sensorSem */
-  osSemaphoreDef(sensorSem);
-  sensorSemHandle = osSemaphoreCreate(osSemaphore(sensorSem), 1);
+  /* creation of sensorSem */
+  sensorSemHandle = osSemaphoreNew(1, 1, &sensorSem_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
+
+  /* Create the timer(s) */
+  /* creation of updateSensorTimer */
+  updateSensorTimerHandle = osTimerNew(CallbackUpdateSensor, osTimerPeriodic, NULL, &updateSensorTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
-  /* definition and creation of envQueue */
-  osMessageQDef(envQueue, 16, ENV_MSG);
-  envQueueHandle = osMessageCreate(osMessageQ(envQueue), NULL);
+  /* creation of envQueue */
+  envQueueHandle = osMessageQueueNew (16, sizeof(ENV_MSG), &envQueue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 4096);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of lcdTask */
+  lcdTaskHandle = osThreadNew(_TouchGFX_Task, NULL, &lcdTask_attributes);
+
+  /* creation of eventHandlerTas */
+  eventHandlerTasHandle = osThreadNew(___eventHandler, NULL, &eventHandlerTas_attributes);
+
+  /* creation of event_loop_task */
+  event_loop_taskHandle = osThreadNew(_eventLoopTask, NULL, &event_loop_task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  //osThreadDef(touchTask, TouchGFX_Task, osPriorityNormal, 0, 4086);
-  //touchGFXTaskHandle = osThreadCreate(osThread(touchTask), NULL);
   /* USER CODE END RTOS_THREADS */
+
+  /* Create the event(s) */
+  /* creation of eventFlag */
+  eventFlagHandle = osEventFlagsNew(&eventFlag_attributes);
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
 
 }
 
@@ -189,15 +240,83 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+	WifiInit();
   /* Infinite loop */
   for (;;)
   {
 	  osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header__TouchGFX_Task */
+/**
+* @brief Function implementing the lcdTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header__TouchGFX_Task */
+void _TouchGFX_Task(void *argument)
+{
+  /* USER CODE BEGIN _TouchGFX_Task */
+  LcdDrvStart();
+
+  TouchGFX_Task(argument);
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END _TouchGFX_Task */
+}
+
+/* USER CODE BEGIN Header____eventHandler */
+/**
+* @brief Function implementing the eventHandlerTas thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header____eventHandler */
+void ___eventHandler(void *argument)
+{
+  /* USER CODE BEGIN ___eventHandler */
+  _eventHandler(argument);
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END ___eventHandler */
+}
+
+/* USER CODE BEGIN Header__eventLoopTask */
+/**
+* @brief Function implementing the eventLoopTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header__eventLoopTask */
+void _eventLoopTask(void *argument)
+{
+  /* USER CODE BEGIN _eventLoopTask */
+	eventLoopTask(argument);
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END _eventLoopTask */
+}
+
+/* CallbackUpdateSensor function */
+void CallbackUpdateSensor(void *argument)
+{
+  /* USER CODE BEGIN CallbackUpdateSensor */
+	osEventFlagsSet(eventFlagHandle, UPDATE_SENSOR_VALUE);
+  /* USER CODE END CallbackUpdateSensor */
 }
 
 /* Private application code --------------------------------------------------*/

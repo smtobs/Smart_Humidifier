@@ -1,7 +1,0 @@
-dht11.c:10:22:polDelayUs	16	static
-dht11.c:19:6:setPinOutput	40	static
-dht11.c:28:6:setPinInput	40	static
-dht11.c:38:6:dht11Init	16	static
-dht11.c:44:6:dht11Start	16	static
-dht11.c:57:9:dht11CheckResponse	24	static
-dht11.c:72:9:dht11Read	24	static

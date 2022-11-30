@@ -2,11 +2,13 @@
 #include "WifiConfig.h"
 #include "mqtt.h"
 #include "common.h"
-#include "ringbuffer.h"
+#include "network.h"
+#include "event.h"
 
-ring_buffer_t wifi_ring_buffer;
+extern s_mqtt mqttPublish;
+extern s_mqtt mqttSubscribe;
 
-Wifi_t	Wifi;
+extern osEventFlagsId_t eventFlagHandle;
 
 //#########################################################################################################
 bool Wifi_SendRaw(uint8_t *data,uint16_t len)
@@ -26,14 +28,6 @@ bool Wifi_SendRaw(uint8_t *data,uint16_t len)
 bool Wifi_SendString(char *data)
 {
 	return Wifi_SendRaw((uint8_t*)data,strlen(data));
-}
-
-bool Wifi_SendStringAndWait(char *data,uint16_t DelayMs)
-{
-	if(Wifi_SendRaw((uint8_t*)data,strlen(data))==false)
-		return false;
-	osDelay(DelayMs);
-	return true;
 }
 
 bool Wifi_WaitForString(uint32_t TimeOut_ms,uint8_t *result,uint8_t CountOfParameter,...)
@@ -147,15 +141,6 @@ bool	Wifi_ReturnInteger(int32_t	*result,uint8_t WantWhichOne,char *SplitterChars
 }
 //#########################################################################################################
 
-bool	Wifi_ReturnFloat(float	*result,uint8_t WantWhichOne,char *SplitterChars)
-{	
-	if((char*)Wifi.RxBuffer == NULL)
-		return false;
-	if(Wifi_ReturnString((char*)Wifi.RxBuffer,WantWhichOne,SplitterChars)==false)
-		return false;
-	*result = atof((char*)Wifi.RxBuffer);
-	return true;
-}
 //#########################################################################################################
 void Wifi_RemoveChar(char *str, char garbage)
 {
@@ -169,13 +154,11 @@ void Wifi_RemoveChar(char *str, char garbage)
 	*dst = '\0';
 }
 //#########################################################################################################
-void Wifi_RxClear(void)
+void Wifi_RxClear()
 {
 	memset(Wifi.RxBuffer,0,_WIFI_RX_SIZE);
-	Wifi.RxIndex=0;	
-
-	ring_buffer_init(&wifi_ring_buffer);
-  HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
+	Wifi.RxIndex=0;
+	HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
 }
 //#########################################################################################################
 void Wifi_TxClear(void)
@@ -194,7 +177,6 @@ void Wifi_RxCallBack(void)
   }
   //--- at command buffer
   //+++  data buffer
-#if (1)
   else                                                                  
   {
     if( HAL_GetTick()-Wifi.RxDataLastTime > 50)
@@ -232,14 +214,23 @@ void Wifi_RxCallBack(void)
     //+++ Fill Data Buffer
     else  
     {      
-    	ring_buffer_queue(&wifi_ring_buffer, (char)(Wifi.usartBuff));
+    	//ring_buffer_queue(&Wifi.wifi_ring_buffer[Wifi.RxDataConnectionNumber], (char)(Wifi.usartBuff));
+    	//Wifi.RxBufferForData[Wifi.RxIndexForData] = Wifi.usartBuff;
 
         if(Wifi.RxIndexForData < _WIFI_RX_FOR_DATA_SIZE)
+        {
+          ring_buffer_queue(&Wifi.wifi_ring_buffer[0], Wifi.usartBuff);
           Wifi.RxIndexForData++;
+        }
         if( Wifi.RxIndexForData>= Wifi.RxDataLen)
         {
           Wifi.RxIsData=false;
           Wifi.GotNewData=true;
+
+          if (isConnectBroker == true)
+          {
+        	  osEventFlagsSet(eventFlagHandle, UART_RECEIVE);
+          }
         }
     }
     //--- Fill Data Buffer    
@@ -264,24 +255,29 @@ void Wifi_RxCallBack(void)
       Wifi.RxDataLastTime = HAL_GetTick();      
     }
   }
-#endif
   //--- check +IPD in At command buffer  
 }
 
-#define CONNECTION_KEEPALIVE_S 60UL
-#define KEEPALIVE_INTERVAL 20
-
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-extern int32_t MQTT_Socket;
-
-void WifiTask(void const * argument)
+void WifiInit()
 {
+	//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, SET);
+	osDelay(1000);
+
+	HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
+
+	for (int i=0; i<3; i++)
+	{
+		ring_buffer_init((&Wifi.wifi_ring_buffer[i]));
+	}
+	Wifi_TxClear();
+
 	DEBUG_PRINT("Start WiFi Task !");
 
-	osDelay(1000);
+	if (mqttInit() == false)
+	{
+		DEBUG_PRINT("mqtt INIT Fail!!!");
+	}
+
 	Wifi_SendString("AT\r\n");
  	Wifi_SetRfPower(82);
 
@@ -291,9 +287,10 @@ void WifiTask(void const * argument)
     Wifi_TcpIp_Close(2);
     Wifi_TcpIp_Close(3);
     Wifi_TcpIp_Close(4);
-    Wifi_TcpIp_SetMultiConnection(false);
-    DEBUG_PRINT("MultiConnection false !");
+    Wifi_TcpIp_SetMultiConnection(true);
+    DEBUG_PRINT("MultiConnection true !");
 
+    //HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, SET);
 	Wifi_GetMode();
 	DEBUG_PRINT("Get WiFi..");
 
@@ -303,128 +300,21 @@ void WifiTask(void const * argument)
 	Wifi_UserInit();
 	DEBUG_PRINT("Wi-Fi Connect");
 
-	do
-	{
+	do { osDelay(1); } while (connectBroker(&mqttPublish) == CONNECT_FAIL);
+	DEBUG_PRINT("mqttPublish Connect Broker !");
 
-	}while (Connect_Broker() == CONNECT_FAIL);
-
-	DEBUG_PRINT("Connect Broker !");
+	do { osDelay(1); } while (subscribe(&mqttPublish) != true);
+	DEBUG_PRINT("subscribe!");
 
 	while (1)
 	{
-		awaitSubscribes();
 		osDelay(1);
 	}
 }
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-void WifiInit(osPriority	Priority)
-{
-	HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
 
-	ring_buffer_init(&wifi_ring_buffer);
-
-
-	Wifi_RxClear();
-	Wifi_TxClear();
-	osSemaphoreDef(WifiSemHandle);
-	WifiSemHandle = osSemaphoreCreate(osSemaphore(WifiSemHandle), 1);
-	osThreadDef(WifiTaskName, WifiTask, Priority, 0, _WIFI_TASK_SIZE);
-	WifiTaskHandle = osThreadCreate(osThread(WifiTaskName), NULL);	
-}
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-bool	Wifi_Restart(void)
+bool Wifi_SetRfPower(uint8_t Power_0_to_82)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+RST\r\n");
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;			
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;
-}
-//#########################################################################################################
-bool	Wifi_DeepSleep(uint16_t DelayMs)
-{
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+GSLP=%d\r\n",DelayMs);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;			
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
-//#########################################################################################################
-bool	Wifi_FactoryReset(void)
-{
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+RESTORE\r\n");
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;			
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
-//#########################################################################################################
-bool	Wifi_Update(void)
-{
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+CIUPDATE\r\n");
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(1000*60*5,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;			
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;			
-}
-//#########################################################################################################
-bool	Wifi_SetRfPower(uint8_t Power_0_to_82)
-{
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -439,16 +329,15 @@ bool	Wifi_SetRfPower(uint8_t Power_0_to_82)
 			break;			
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
 //#########################################################################################################
 //#########################################################################################################
 //#########################################################################################################
 //#########################################################################################################
-bool Wifi_SetMode(WifiMode_t	WifiMode_)
+bool Wifi_SetMode(WifiMode_t WifiMode_)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -464,13 +353,13 @@ bool Wifi_SetMode(WifiMode_t	WifiMode_)
 		Wifi.Mode = WifiMode_;
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
+
 //#########################################################################################################
 bool Wifi_GetMode(void)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -489,13 +378,13 @@ bool Wifi_GetMode(void)
 			Wifi.Mode = WifiMode_Error;
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;
 }
 //#########################################################################################################
 bool Wifi_GetMyIp(void)
 {	
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -529,7 +418,7 @@ bool Wifi_GetMyIp(void)
     
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
 
@@ -539,7 +428,7 @@ bool Wifi_GetMyIp(void)
 //#########################################################################################################
 bool	Wifi_Station_ConnectToAp(char *SSID,char *Pass,char *MAC)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -573,34 +462,14 @@ bool	Wifi_Station_ConnectToAp(char *SSID,char *Pass,char *MAC)
 		returnVal=true;	
 	}while(0);
 
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
-//#########################################################################################################
-bool	Wifi_Station_Disconnect(void)
-{
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+CWQAP\r\n");
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;				
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
+
 //#########################################################################################################
 bool	Wifi_Station_DhcpEnable(bool Enable)
 {         
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -616,13 +485,13 @@ bool	Wifi_Station_DhcpEnable(bool Enable)
 		Wifi.StationDhcp=Enable;		
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
 //#########################################################################################################
 bool	Wifi_Station_DhcpIsEnable(void)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -658,13 +527,13 @@ bool	Wifi_Station_DhcpIsEnable(void)
 		}
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
 //#########################################################################################################
 bool	Wifi_Station_SetIp(char *IP,char *GateWay,char *NetMask)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -680,51 +549,14 @@ bool	Wifi_Station_SetIp(char *IP,char *GateWay,char *NetMask)
 		Wifi.StationDhcp=false;		
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
-//#########################################################################################################
 
-//#########################################################################################################
-
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-//#########################################################################################################
-bool  Wifi_SoftAp_GetConnectedDevices(void)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+CWLIF\r\n");
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;		
-		Wifi_RemoveChar((char*)Wifi.RxBuffer,'\r');
-    Wifi_ReturnStrings((char*)Wifi.RxBuffer,"\n,",10,Wifi.SoftApConnectedDevicesIp[0],Wifi.SoftApConnectedDevicesMac[0],Wifi.SoftApConnectedDevicesIp[1],Wifi.SoftApConnectedDevicesMac[1],Wifi.SoftApConnectedDevicesIp[2],Wifi.SoftApConnectedDevicesMac[2],Wifi.SoftApConnectedDevicesIp[3],Wifi.SoftApConnectedDevicesMac[3],Wifi.SoftApConnectedDevicesIp[4],Wifi.SoftApConnectedDevicesMac[4]);
-		for(uint8_t i=0 ; i<6 ; i++)
-    {
-      if( (Wifi.SoftApConnectedDevicesIp[i][0]<'0') || (Wifi.SoftApConnectedDevicesIp[i][0]>'9'))
-        Wifi.SoftApConnectedDevicesIp[i][0]=0;      
-      if( (Wifi.SoftApConnectedDevicesMac[i][0]<'0') || (Wifi.SoftApConnectedDevicesMac[i][0]>'9'))
-        Wifi.SoftApConnectedDevicesMac[i][0]=0;      
-    }
-    
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;			
-}
 //#########################################################################################################
 bool  Wifi_SoftAp_Create(char *SSID,char *password,uint8_t channel,WifiEncryptionType_t WifiEncryptionType,uint8_t MaxConnections_1_to_4,bool HiddenSSID)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
+  //osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -739,7 +571,7 @@ bool  Wifi_SoftAp_Create(char *SSID,char *password,uint8_t channel,WifiEncryptio
 			break;		  
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		  
 }
 //#########################################################################################################
@@ -748,7 +580,7 @@ bool  Wifi_SoftAp_Create(char *SSID,char *password,uint8_t channel,WifiEncryptio
 //#########################################################################################################
 bool  Wifi_TcpIp_GetConnectionStatus(void)
 {
-	osSemaphoreWait(WifiSemHandle,osWaitForever);
+	//osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool returnVal=false;
 	do
@@ -780,13 +612,13 @@ bool  Wifi_TcpIp_GetConnectionStatus(void)
     }
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;			
 }
 //#########################################################################################################
 bool  Wifi_TcpIp_Ping(char *PingTo)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
+ // osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -803,36 +635,41 @@ bool  Wifi_TcpIp_Ping(char *PingTo)
       break;    
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
 //#########################################################################################################
 bool  Wifi_TcpIp_SetMultiConnection(bool EnableMultiConnections)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
+ // osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
+	uint8_t txBuffer[128] = {0,};
 	bool		returnVal=false;
 	do
 	{
 		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+CIPMUX=%d\r\n",EnableMultiConnections);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
+		sprintf((char*)txBuffer,"AT+CIPMUX=%d\r\n",EnableMultiConnections);
+		if (Wifi_SendString((char*)txBuffer) == false)
+		{
+			DEBUG_PRINT("false");
 			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
+		}
+		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR") == false)
+		{
+			DEBUG_PRINT("Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2, OK,ERROR) == false");
 			break;
-		if(result == 2)
-			break;				
-    Wifi.TcpIpMultiConnection=EnableMultiConnections;		
+		}
+		Wifi.TcpIpMultiConnection=EnableMultiConnections;
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;			
 }
 //#########################################################################################################
 bool  Wifi_TcpIp_GetMultiConnection(void)
 {
   
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
+ // osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -850,70 +687,15 @@ bool  Wifi_TcpIp_GetMultiConnection(void)
     Wifi.TcpIpMultiConnection=(bool)result;		
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;			
 }
 //#########################################################################################################
-bool  Wifi_TcpIp_StartTcpConnection(uint8_t LinkId,char *RemoteIp,uint16_t RemotePort,uint16_t TimeOut)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		sprintf((char*)Wifi.TxBuffer,"AT+CIPSERVER=1,%d\r\n",RemotePort);
 
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;		
-		Wifi_RxClear();
-    if(Wifi.TcpIpMultiConnection==false)
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSTART=\"TCP\",\"%s\",%d,%d\r\n",RemoteIp,RemotePort,TimeOut);
-    else
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSTART=%d,\"TCP\",\"%s\",%d,%d\r\n",LinkId,RemoteIp,RemotePort,TimeOut);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_HIGH,&result,3,"OK","CONNECT","ERROR")==false)
-			break;
-		if(result == 3)
-			break;		
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
-//#########################################################################################################
-bool  Wifi_TcpIp_StartUdpConnection(uint8_t LinkId,char *RemoteIp,uint16_t RemotePort,uint16_t LocalPort)
-{ 
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-    if(Wifi.TcpIpMultiConnection==false)
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSTART=\"UDP\",\"%s\",%d,%d\r\n",RemoteIp,RemotePort,LocalPort);
-    else
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSTART=%d,\"UDP\",\"%s\",%d,%d\r\n",LinkId,RemoteIp,RemotePort,LocalPort);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_HIGH,&result,3,"OK","ALREADY","ERROR")==false)
-			break;
-		if(result == 3)
-			break;		
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
 //#########################################################################################################
 bool  Wifi_TcpIp_Close(uint8_t LinkId)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
+  //osSemaphoreWait(WifiSemHandle,osWaitForever);
 	uint8_t result;
 	bool		returnVal=false;
 	do
@@ -931,204 +713,67 @@ bool  Wifi_TcpIp_Close(uint8_t LinkId)
 			break;		
 		returnVal=true;	
 	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
+	//osSemaphoreRelease(WifiSemHandle);
 	return returnVal;		
 }
-//#########################################################################################################
-bool  Wifi_TcpIp_SetEnableTcpServer(uint16_t PortNumber)
+
+bool WifiTcpIpTcpConnection(uint8_t socket, const char *ip, const char *port, uint16_t timeOut)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
+	char tx_buffer[128] = {0,};
+
+	char dsg[128] = {0,};
+	snprintf(dsg, sizeof(dsg), "WifiTcpIpTcpConnection[%d]", socket);
+
+	DEBUG_PRINT(dsg);
+
+	wifiRxClear(socket);
+	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)"AT+CIPSERVER=1,%d\r\n",strlen("AT+CIPSERVER=1,%d\r\n"), 1000);
+	osDelay(100);
+
+	if (Wifi.TcpIpMultiConnection == false)
 	{
-		Wifi_RxClear();
-    if(Wifi.TcpIpMultiConnection==false)
-    {
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPMUX=1\r\n");
-      if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-        break;
-      if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-        break;    
-      Wifi.TcpIpMultiConnection=true;
-      Wifi_RxClear();      
-    }
-    else
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSERVER=1,%d\r\n",PortNumber);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;		
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;		
-}
-//#########################################################################################################
-bool  Wifi_TcpIp_SetDisableTcpServer(uint16_t PortNumber)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
+		HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", ip, port), timeOut);
+	}
+	else
 	{
-		Wifi_RxClear();
-    sprintf((char*)Wifi.TxBuffer,"AT+CIPSERVER=0,%d\r\n",PortNumber);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		if(result == 2)
-			break;		
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;	
-}
-//#########################################################################################################
-bool  Wifi_TcpIp_SendDataUdp(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-    if(Wifi.TcpIpMultiConnection==false)
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSERVER=0\r\n");
-    else
-      sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d,%d\r\n",LinkId,dataLen);
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-			break;
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,">","ERROR")==false)
-			break;
-		if(result == 2)
-			break;		
-    Wifi_RxClear();
-    Wifi_SendRaw(data,dataLen);
-    if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-			break;
-		returnVal=true;	
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;	
-  
-}
-//#########################################################################################################
-bool  Wifi_TcpIp_SendDataTcp(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
-{
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
-	{
-		Wifi_RxClear();
-		if(Wifi.TcpIpMultiConnection==false)
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d\r\n",dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d\r\n",dataLen);
-		}
-		else
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d,%d\r\n",LinkId,dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d,%d\r\n",LinkId,dataLen);
-		}
+		HAL_UART_Transmit(&_WIFI_USART, (uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSTART=%d,\"TCP\",\"%s\",%s\r\n", socket, ip, port), timeOut);
+	}
+	wifiRxClear(socket);
+	osDelay(2000);
 
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-		{
-			DEBUG_PRINT("Wifi_SendString return == false..");
-			break;
-		}
-
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-		{
-			break;
-		}
-
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,3,">","ERROR","busy")==false)
-		{
-			break;
-		}
-
-#if (0)
-		if(result > 1)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"result\r\n", strlen("result\r\n"), 1000);
-			break;
-		}
-#endif
-		Wifi_RxClear();
-		Wifi_SendRaw(data,dataLen);
-
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-		{
-			break;
-		}
-		returnVal=true;
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;	  
+	//DEBUG_PRINT(socket);
+	return true;
 }
 
-
-bool Wifi_TcpIp_StartMqttConnection(uint8_t LinkId,uint16_t dataLen,uint8_t *data)
+bool WifiSend(uint8_t socket, uint16_t length, uint8_t *data)
 {
-  osSemaphoreWait(WifiSemHandle,osWaitForever);
-	uint8_t result;
-	bool		returnVal=false;
-	do
+	char tx_buffer[128] = {0,};
+
+	wifiRxClear(socket);
+	if (Wifi.TcpIpMultiConnection == false)
 	{
-		Wifi_RxClear();
-		if(Wifi.TcpIpMultiConnection==false)
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d\r\n",dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d\r\n",dataLen);
-		}
-		else
-		{
-		  sprintf((char*)Wifi.TxBuffer,"AT+CIPSENDBUF=%d,%d\r\n",LinkId,dataLen);
-			//sprintf((char*)Wifi.TxBuffer,"AT+CIPSEND=%d,%d\r\n",LinkId,dataLen);
-		}
+		HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSEND=%d\r\n", length), 1000);
+	}
+	else
+	{
+		HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)tx_buffer, sprintf(tx_buffer,"AT+CIPSEND=%d,%d\r\n", socket, length), 1000);
+	}
+	osDelay(20);
 
-		if(Wifi_SendString((char*)Wifi.TxBuffer)==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"TxBuffer)==false\r\n", strlen("TxBuffer)==false\r\n"), 1000);
-			break;
-		}
+	wifiRxClear(socket);
+	HAL_UART_Transmit(&_WIFI_USART,(uint8_t *)data, length, 1000);
 
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"OK","ERROR")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"OK ERROR\r\n", strlen("OK ERROR\r\n"), 1000);
-			break;
-		}
+	return true;
+}
 
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,3,">","ERROR","busy")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"ERROR busy\r\n", strlen("ERROR busy\r\n"), 1000);
-			break;
-		}
+void wifiRxClear(uint8_t socket)
+{
+	memset(Wifi.RxBuffer,0,_WIFI_RX_SIZE);
+	Wifi.RxIndex=0;
 
-#if (0)
-		if(result > 1)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"result\r\n", strlen("result\r\n"), 1000);
-			break;
-		}
-#endif
-		Wifi_RxClear();
-		Wifi_SendRaw(data,dataLen);
-
-		if(Wifi_WaitForString(_WIFI_WAIT_TIME_LOW,&result,2,"CONNACK")==false)
-		{
-			HAL_UART_Transmit(&huart1, (uint8_t *)"CONNACK ERROR\r\n", strlen("CONNACK ERROR\r\n"), 1000);
-			break;
-		}
-		returnVal=true;
-	}while(0);
-	osSemaphoreRelease(WifiSemHandle);
-	return returnVal;
+	ring_buffer_init(&Wifi.wifi_ring_buffer[0]);
+	ring_buffer_init(&Wifi.wifi_ring_buffer[socket]);
+	HAL_UART_Receive_IT(&_WIFI_USART,&Wifi.usartBuff,1);
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)

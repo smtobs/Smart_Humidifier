@@ -1,6 +1,8 @@
-mqtt.c:23:5:transport_getdata	24	static
-mqtt.c:35:5:Connect_Broker	496	static
-mqtt.c:80:6:mqttMessageHandling	152	static
-mqtt.c:99:6:PacketProcessing	216	static
-mqtt.c:139:5:awaitSubscribes	440	static
-mqtt.c:189:6:ayncPublish	184	static
+mqtt.c:14:5:publish_transport_getdata	24	static
+mqtt.c:27:5:subscribe_transport_getdata	24	static
+mqtt.c:40:6:mqttInit	8	static
+mqtt.c:62:5:connectBroker	248	static
+mqtt.c:97:6:mqttMessageHandling	152	static
+mqtt.c:115:15:PacketProcessing	216	static
+mqtt.c:159:5:subscribe	184	static
+mqtt.c:177:6:publish	56	static

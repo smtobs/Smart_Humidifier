@@ -1,6 +1,10 @@
-workTask.c:22:14:createJsonMessage	32	static
-workTask.c:76:13:messageForwardServer	16	static
-workTask.c:90:10:messageForwardLcdTask	16	static
-workTask.c:95:6:sensorEventHandling	16	static
-workTask.c:111:6:_workTask	64	static
-workTask.c:158:6:workTaskInit	56	static
+workTask.c:32:14:createJsonMessage	40	static
+workTask.c:100:13:messageForwardBroker	24	static
+workTask.c:113:10:messageForwardLcdTask	16	static
+workTask.c:118:6:sensorEventHandling	152	static
+workTask.c:139:6:humidifierOn	8	static
+workTask.c:155:6:humidifierOff	8	static
+workTask.c:165:6:receiveHandlling	8	static
+workTask.c:170:6:wifiSendRepHandlling	4	static
+workTask.c:175:6:eventHandlerInit	16	static
+workTask.c:184:6:_eventHandler	104	static

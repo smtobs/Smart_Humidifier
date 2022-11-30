@@ -63,7 +63,7 @@ Drivers/BSP/Components/wm8994 \
 Drivers/BSP/STM32F429I-Discovery \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Middlewares/MQTTPacket/src \
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
+Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 Middlewares/Third_Party/FreeRTOS/Source \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \

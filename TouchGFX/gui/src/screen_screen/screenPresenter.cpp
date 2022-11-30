@@ -24,7 +24,7 @@ void screenPresenter::updateHumidifierControlState(bool state)
 
 void screenPresenter::UpdateTemp(int val)
 {
-	if (val >= 0 && val <= 50)
+	if (val >= -50 && val <= 50)
 	{
 		view.UpdateTempView(val);
 	}
@@ -32,8 +32,28 @@ void screenPresenter::UpdateTemp(int val)
 
 void screenPresenter::UpdateHum(int val)
 {
-	if (val >= 20 && val <= 100)
+	if (val >= -50 && val <= 100)
 	{
 		view.UpdateHumView(val);
 	}
+}
+
+bool prvStatus = false;
+
+void screenPresenter::ChkUpdateOnOffButton(bool status)
+{
+	if (prvStatus == status)
+	{
+		return;
+	}
+
+	if (status == true)
+	{
+		view.updateOnButton();
+	}
+	else
+	{
+		view.updateOffButton();
+	}
+	prvStatus = status;
 }

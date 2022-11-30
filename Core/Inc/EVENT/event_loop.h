@@ -24,6 +24,6 @@ osSemaphoreId 	     eventLoopHandle;
 
 extern ring_buffer_t ring_buffer;
 
-void eventLoopInit(osPriority);
+void eventLoopTask(void const *);
 
 #endif /* INC_EVENT_LOOP_H_ */

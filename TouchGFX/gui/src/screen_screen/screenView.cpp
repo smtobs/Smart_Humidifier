@@ -38,6 +38,16 @@ void screenView::updateOnOffButtonState()
 	presenter->updateHumidifierControlState(humOnOffButton.getState());
 }
 
+void screenView::updateOnButton()
+{
+	 screenViewBase::humOnOffButton.forceState(true);
+}
+
+void screenView::updateOffButton()
+{
+	screenViewBase::humOnOffButton.forceState(false);
+}
+
 void screenView::UpdateTempView(int val)
 {
 	std::string s = std::to_string(val);
@@ -55,9 +65,6 @@ void screenView::UpdateHumView(int val)
 
 	s += "%";
 	char const *pchar = s.c_str();  //use char const* as target type
-
-	//memset(humTextViewBuffer, 0x0, sizeof(humTextViewBuffer));
-
 	Unicode::strncpy(humTextViewBuffer, pchar, strlen(pchar));
 	screenViewBase::humText.invalidate();
 }

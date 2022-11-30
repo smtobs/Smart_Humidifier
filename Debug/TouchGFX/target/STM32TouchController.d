@@ -4,8 +4,8 @@ TouchGFX/target/STM32TouchController.o: \
  ../Middlewares/ST/touchgfx/framework/include/platform/driver/touch/TouchController.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Types.hpp \
  ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Config.hpp \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_ts.h \
- C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_ts.h \
+ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -26,6 +26,9 @@ TouchGFX/target/STM32TouchController.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
@@ -43,9 +46,9 @@ TouchGFX/target/STM32TouchController.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\stmpe811\stmpe811.h \
- c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\ts.h \
- c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\io.h \
+ c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\stmpe811\stmpe811.h \
+ c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\ts.h \
+ c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\io.h \
  ../Core/Inc/main.h
 
 ../TouchGFX/target/STM32TouchController.hpp:
@@ -56,9 +59,9 @@ TouchGFX/target/STM32TouchController.o: \
 
 ../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Config.hpp:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_ts.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_ts.h:
 
-C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h:
+C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/11_06_test/2022_10_09_commit/SmartHumidfier/Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
@@ -100,6 +103,12 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Dri
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
 
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
+
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma2d.h:
@@ -134,10 +143,10 @@ C:/Users/v7dd1/STM32CubeIDE/workspace_1.6.1/2022_10_09_commit/SmartHumidfier/Dri
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
-c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\stmpe811\stmpe811.h:
+c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\stmpe811\stmpe811.h:
 
-c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\ts.h:
+c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\ts.h:
 
-c:\users\v7dd1\stm32cubeide\workspace_1.6.1\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\io.h:
+c:\users\v7dd1\stm32cubeide\workspace_1.6.1\11_06_test\2022_10_09_commit\smarthumidfier\drivers\bsp\components\common\io.h:
 
 ../Core/Inc/main.h:

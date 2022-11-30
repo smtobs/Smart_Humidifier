@@ -7,6 +7,7 @@
 #include "cmsis_os.h"
 
 #include "main.h"
+#include "ringbuffer.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -56,7 +57,9 @@ typedef struct
 	uint8_t                       RxBuffer[_WIFI_RX_SIZE];
 	uint8_t                       TxBuffer[_WIFI_TX_SIZE];
 	uint16_t                      RxIndex;
-  uint8_t                       RxBufferForData[_WIFI_RX_FOR_DATA_SIZE];
+ // uint8_t                       RxBufferForData[_WIFI_RX_FOR_DATA_SIZE];
+  ring_buffer_t                 wifi_ring_buffer[3];
+
   uint8_t                       RxBufferForDataTmp[8];
   uint8_t                       RxIndexForDataTmp;
   uint16_t                      RxIndexForData;
@@ -80,12 +83,12 @@ typedef struct
   bool                          TcpIpMultiConnection;
   uint16_t                      TcpIpPingAnswer;
   WifiConnection_t              TcpIpConnections[5];
+  bool                          sendCallBack;
   //----------------
 }Wifi_t;
 //###################################################################################################
-extern Wifi_t	Wifi;
+Wifi_t	Wifi;
 extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart6;
 
 osThreadId 		WifiTaskHandle;
 osSemaphoreId 	WifiSemHandle;
@@ -100,7 +103,7 @@ void  Wifi_UserGetTcpData(uint8_t LinkId,uint16_t DataLen,uint8_t *Data);
 void	Wifi_RxCallBack(void);
 void    Wifi_RxClear(void);
 //###################################################################################################
-void	WifiInit(osPriority	Priority);
+void	WifiInit();
 //###################################################################################################
 bool	Wifi_Restart(void);
 bool	Wifi_DeepSleep(uint16_t DelayMs);
@@ -125,17 +128,14 @@ bool  Wifi_TcpIp_GetConnectionStatus(void);
 bool  Wifi_TcpIp_Ping(char *PingTo);
 bool  Wifi_TcpIp_SetMultiConnection(bool EnableMultiConnections);
 bool  Wifi_TcpIp_GetMultiConnection(void);
-bool  Wifi_TcpIp_StartTcpConnection(uint8_t LinkId,char *RemoteIp,uint16_t RemotePort,uint16_t TimeOut_S);
-bool  Wifi_TcpIp_StartUdpConnection(uint8_t LinkId,char *RemoteIp,uint16_t RemotePort,uint16_t LocalPort);
 bool  Wifi_TcpIp_Close(uint8_t LinkId);
-bool  Wifi_TcpIp_SetEnableTcpServer(uint16_t PortNumber);
-bool  Wifi_TcpIp_SetDisableTcpServer(uint16_t PortNumber);
-bool  Wifi_TcpIp_SendDataUdp(uint8_t LinkId,uint16_t dataLen,uint8_t *data);
-bool  Wifi_TcpIp_SendDataTcp(uint8_t LinkId,uint16_t dataLen,uint8_t *data);
 bool Wifi_SendString(char *data);
-bool Wifi_SendStringAndWait(char *data,uint16_t DelayMs);
 bool Wifi_WaitForString(uint32_t TimeOut_ms,uint8_t *result,uint8_t CountOfParameter,...);
-bool Wifi_TcpIp_StartMqttConnection(uint8_t LinkId,uint16_t dataLen,uint8_t *data);
 
+bool WifiTcpIpTcpConnection(uint8_t LinkId, const char *ip, const char *port, uint16_t timeOut);
+bool WifiSend(uint8_t socket, uint16_t length, uint8_t *data);
+void wifiRxClear(uint8_t socket);
 bool Wifi_SendRaw(uint8_t *data,uint16_t len);
+void WifiTask(void const * argument);
+
 #endif

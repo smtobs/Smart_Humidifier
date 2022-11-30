@@ -11,23 +11,23 @@
 //#include "main.h"
 #include "common.h"
 #include "sensorConfig.h"
-#include "dht11.h"
 #include "event.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cmsis_os.h"
+#include "stdbool.h"
+
+extern ADC_HandleTypeDef hadc1;
 
 osThreadId 		sensorTaskHandle;
 osSemaphoreId 	sensorHandle;
 
-extern osSemaphoreId sensorSemHandle;
-extern osSemaphoreId envSemHandle;
-extern osMessageQId envQueueHandle;
-extern osPoolId     Pool_ID;
+typedef struct {
+	int temparature;
+	int humidity;
+}sensorDev;
 
-DHT11_Dev dht11Dev;
-void sensorInit(osPriority);
-
+bool readEth01dvSensor(sensorDev *sensor);
 
 #endif /* INC_SENSOR_H_ */

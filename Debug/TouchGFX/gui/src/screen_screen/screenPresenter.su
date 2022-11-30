@@ -8,6 +8,7 @@ ModelListener.hpp:11:13:ModelListener::~ModelListener()	16	static
 ModelListener.hpp:11:13:virtual ModelListener::~ModelListener()	16	static
 ModelListener.hpp:18:18:virtual void ModelListener::UpdateTemp(int)	16	static
 ModelListener.hpp:19:18:virtual void ModelListener::UpdateHum(int)	16	static
+ModelListener.hpp:20:18:virtual void ModelListener::ChkUpdateOnOffButton(bool)	16	static
 screenPresenter.hpp:28:13:screenPresenter::~screenPresenter()	16	static
 screenPresenter.hpp:28:13:virtual screenPresenter::~screenPresenter()	16	static
 screenPresenter.cpp:4:1:screenPresenter::screenPresenter(screenView&)	16	static
@@ -16,3 +17,4 @@ screenPresenter.cpp:15:6:virtual void screenPresenter::deactivate()	16	static
 screenPresenter.cpp:20:6:virtual void screenPresenter::updateHumidifierControlState(bool)	16	static
 screenPresenter.cpp:25:6:virtual void screenPresenter::UpdateTemp(int)	16	static
 screenPresenter.cpp:33:6:virtual void screenPresenter::UpdateHum(int)	16	static
+screenPresenter.cpp:43:6:virtual void screenPresenter::ChkUpdateOnOffButton(bool)	16	static

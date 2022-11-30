@@ -14,15 +14,10 @@ extern void TouchGFX_Task(void const * argument);
 
 static LCD_DrvTypeDef* LcdDrv;
 
-void tftLcdInit(osPriority	Priority)
+void LcdDrvStart()
 {
 	LcdDrv = &ili9341_drv;
 	LcdDrv->Init();
 	LcdDrv->DisplayOff();
-
-	osSemaphoreDef(lcdHandle);
-	lcdHandle = osSemaphoreCreate(osSemaphore(lcdHandle), 1);
-	osThreadDef(lcdTaskName, TouchGFX_Task, Priority, 0, _LCD_TASK_SIZE);
-	lcdTaskHandle = osThreadCreate(osThread(lcdTaskName), NULL);
 }
 

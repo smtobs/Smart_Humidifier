@@ -14,7 +14,8 @@ void _debugPrint(char *debugMsg, char *file, const char *func, int line)
 	int n;
 
 	n = snprintf(debugBuff, MAX_DEBUG_BUFF,
-				"File : %s \r\nFunction : %s \r\nLine : %d \r\nDebug : %s\r\n\r\n", file, func, line, debugMsg);
+				//"File : %s \r\nFunction : %s \r\nLine : %d \r\nDebug : %s\r\n\r\n", file, func, line, debugMsg);
+				"Debug : %s\r\n\r\n", debugMsg);
 	if ( n < 0 || n >= MAX_DEBUG_BUFF )
 
 	{

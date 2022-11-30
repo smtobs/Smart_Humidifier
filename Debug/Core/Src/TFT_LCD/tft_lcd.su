@@ -1,1 +1,1 @@
-tft_lcd.c:17:6:tftLcdInit	56	static
+tft_lcd.c:17:6:LcdDrvStart	8	static

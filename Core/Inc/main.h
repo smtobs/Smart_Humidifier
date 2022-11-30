@@ -60,12 +60,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define HUMIDIFIER_SW_PIN_Pin GPIO_PIN_2
 #define HUMIDIFIER_SW_PIN_GPIO_Port GPIOE
-#define DHT11_Pin GPIO_PIN_3
-#define DHT11_GPIO_Port GPIOE
-#define PC14_OSC32_IN_Pin GPIO_PIN_14
-#define PC14_OSC32_IN_GPIO_Port GPIOC
-#define PC15_OSC32_OUT_Pin GPIO_PIN_15
-#define PC15_OSC32_OUT_GPIO_Port GPIOC
 #define A0_Pin GPIO_PIN_0
 #define A0_GPIO_Port GPIOF
 #define A1_Pin GPIO_PIN_1
@@ -96,8 +90,6 @@ void Error_Handler(void);
 #define NCS_MEMS_SPI_GPIO_Port GPIOC
 #define CSX_Pin GPIO_PIN_2
 #define CSX_GPIO_Port GPIOC
-#define B1_Pin GPIO_PIN_0
-#define B1_GPIO_Port GPIOA
 #define MEMS_INT1_Pin GPIO_PIN_1
 #define MEMS_INT1_GPIO_Port GPIOA
 #define MEMS_INT2_Pin GPIO_PIN_2
