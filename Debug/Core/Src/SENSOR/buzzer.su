@@ -1,0 +1,7 @@
+buzzer.c:15:6:buzzerInit	16	static
+buzzer.c:24:6:humidifierOnBuzzerSound	8	static
+buzzer.c:40:6:buzzerSpeedButtonSound	8	static
+buzzer.c:52:6:buzzerStartFreq	8	static
+buzzer.c:58:6:buzzerStoptFreq	8	static
+buzzer.c:63:6:buzzerGenFreq	24	static
+buzzer.c:75:6:buzzerBlinkSound	8	static
